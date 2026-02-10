@@ -1,0 +1,163 @@
+#root {
+  /* max-width: 1280px; */
+  width: 100vw;
+  margin: 0 auto;
+  padding: .5rem;
+  text-align: center;
+}
+
+#mainContent {
+  height: calc(100vh - 60px);
+}
+
+#footerSpacer {
+  margin-bottom: 60px; /* Height of the sticky footer */
+}
+
+.flex-column {
+  display: flex;
+  flex-direction: column;
+  /* justify-content: center;
+  align-items: center; */
+}
+
+.flex-row {
+  display: flex;
+  flex-direction: row;
+  /* justify-content: center;
+  align-items: center; */
+}
+
+.flex-end-row {
+  justify-content: flex-end;
+}
+
+.padded-column {
+  padding: 0rem .5rem 0rem .5rem;
+}
+
+.padded-row {
+  padding: 0.5rem 0rem 0.5rem 0rem;
+}
+
+.spaced-between-row {
+  justify-content: space-between;
+}
+
+.spaced-around-row {
+  justify-content: space-around;
+}
+
+.centered-column {
+  justify-content: center;
+}
+
+.centered-row {
+  justify-content: center;
+  align-items: center;
+}
+
+.align-start-column {
+  align-items: flex-start;
+  text-align: start;
+}
+
+.flex-end-column {
+  justify-content: flex-end;
+}
+
+h4 {
+  margin: .5rem 0;
+}
+
+p {
+  margin: 8px 0;
+}
+
+small {
+  font-size: 11px;
+}
+
+button,
+input[type=button] {
+  border-style: solid;
+  box-sizing: border-box;
+  cursor: pointer;
+  color: white;
+  transition: 0.3s;
+  outline: none;
+}
+
+input[type=number] {
+   min-height: 20px; 
+}
+
+input[type=number][size="2"] {
+   width: 3rem; 
+}
+
+input[type=number][size="3"] {
+   width: 4rem; 
+}
+
+input[type=number][size="5"] {
+   width: 5rem; 
+}
+
+textarea.no-resize {
+  resize: none;
+}
+
+.hidden {
+    display: none;
+}
+
+.full-width {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.section-row {
+  margin-bottom: .5rem;
+}
+
+#inputContainerColumn {
+  width: 50%;
+}
+
+#outputContainerColumn {
+  width: 50%;
+}
+
+#controlColumn {
+  width: 50%;
+}
+
+#headerRow {
+  border-bottom: 1px solid white;
+  box-sizing: border-box;
+  padding-bottom: 1rem;
+  align-items: center;
+
+  text-align: start;
+  h3 {
+    margin: .5rem 0 .5rem 0;
+  }
+  small {
+    font-size: 12px;
+  }
+}
+
+#btnDownload {
+    background-color: color-mix(in oklab, rgba(155, 157, 103, 1) 75%, black);
+    border: 1px solid color-mix(in oklab, rgba(155, 157, 103, 1) 75%, black);
+}
+
+#btnDownload:hover {
+    background-color: color-mix(in oklab, rgba(155, 157, 103, 1) 90%, black);
+    border-color: color-mix(in oklab, rgba(155, 157, 103, 1) 90%, black);
+}
+
+#controlRow {
+  padding-top: 8px;
+}

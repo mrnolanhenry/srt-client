@@ -1,0 +1,9 @@
+#btnFix {
+    background-color: color-mix(in oklab, rgba(82, 131, 136, 1) 75%, black);
+    border: 1px solid color-mix(in oklab, rgba(82, 131, 136, 1) 75%, black);
+}
+
+#btnFix:hover {
+    background-color: color-mix(in oklab, rgba(82, 131, 136, 1) 90%, black);
+    border-color: color-mix(in oklab, rgba(82, 131, 136, 1) 90%, black);
+}

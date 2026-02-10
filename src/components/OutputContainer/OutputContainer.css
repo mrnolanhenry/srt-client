@@ -1,0 +1,43 @@
+.output-tab-content-row {
+  height: 400px;
+  box-sizing: border-box;
+  border-radius: 0 8px 8px 8px;
+  background-color: rgba(155, 157, 103, 1);
+}
+
+.output-container-tab {
+  overflow: hidden;
+}
+
+.output-container-tab button {
+    background-color: rgba(155, 157, 103, 1);
+    float: left;
+    border: 1px solid rgba(155, 157, 103, 1);
+    -moz-border-radius: 0px;
+    -webkit-border-radius: 8px 8px 0px 0px;
+    border-radius: 8px 8px 0px 0px;
+    outline: none;
+}
+
+.output-container-tab button:hover {
+  background-color: rgba(155, 157, 103, 1);
+  border-color: rgba(155, 157, 103, 1);
+}
+
+.output-container-tab button.active {
+  background-color: rgba(155, 157, 103, 1);
+  border-color: rgba(155, 157, 103, 1);
+}
+
+.output-container-tabcontent {
+  padding: 0;
+  height: 100%;
+}
+
+.inner-tabcontent-container {
+  height: 100%;
+}
+
+.padded-container {
+  padding: 16px;
+}

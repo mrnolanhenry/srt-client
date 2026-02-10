@@ -1,0 +1,32 @@
+.copy-text-button {
+    /* position: absolute; */
+    /* TODO: Try this out - revert back to absolute, which was working, if necessary */
+    position: fixed;
+    margin: 10px 22px 0 0;
+    float: right;
+    z-index: 999;
+    cursor: pointer;
+    transition: .3s;
+    color: white;
+    text-shadow: 2px 2px 15px rgba(0, 0, 0);
+}
+
+.copy-text-hover {
+    display: none;
+    color: #aaa;
+}
+
+.copy-text-button:hover {
+    .copy-text-hover {
+        display: block;
+    }
+}
+
+.copy-text-span {
+    display: flex;
+    align-items: center;
+}
+
+.copy-text-character {
+    padding-left: 4px;
+}
