@@ -8,6 +8,7 @@ import TimeUtils from './utilities/TimeUtils';
 import Time from './classes/Time';
 import InputContainer from './components/InputContainer/InputContainer';
 import OutputContainer from './components/OutputContainer/OutputContainer';
+import VideoUploadAndPlayer from './components/VideoUploadAndPlayer/VideoUploadAndPlayer';
 import StickyFooter from './components/StickyFooter/StickyFooter';
 
 function App() {
@@ -25,6 +26,8 @@ function App() {
   const [timeInput, setTimeInput] = useState<Time>(new Time(0, 0, 0, 0));
 
   const shouldScrubNonDialogue = false;
+
+  const videoRef = useRef<HTMLVideoElement>(null);
 
   const refInputTextArea = useRef<HTMLTextAreaElement>(null);
   const refOutputTextArea = useRef<HTMLTextAreaElement>(null);
@@ -156,6 +159,13 @@ function App() {
                 <h3>Fix Subtitles</h3>
               </div>
             </div>
+          </div>
+          <div className="flex-column full-width centered-column">
+              <div id="videoUploadRow" className="flex-row section-row centered-row">
+                <VideoUploadAndPlayer
+                  videoRef={videoRef as React.RefObject<HTMLVideoElement>}
+                />
+              </div>
           </div>
           <div className="flex-column full-width centered-column">
             <div className="flex-row section-row">
