@@ -1,14 +1,15 @@
 import React, { useState, useRef, useEffect } from 'react';
 
 interface VideoUploadAndPlayerProps {
+  cues: VTTCue[];
   videoRef: React.RefObject<HTMLVideoElement>;
 }
 
-const VideoUploadAndPlayer = ({videoRef, }: VideoUploadAndPlayerProps) => {
+const VideoUploadAndPlayer = ({cues, videoRef, }: VideoUploadAndPlayerProps) => {
   const [videoSrc, setVideoSrc] = useState<string | null>(null);
+  const [isNewUpload, setIsNewUpload] = useState(false);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
-
 
   const handleVideoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
@@ -16,9 +17,7 @@ const VideoUploadAndPlayer = ({videoRef, }: VideoUploadAndPlayerProps) => {
       const file = files[0];
       // Create a Blob URL for the uploaded file
       const objectUrl = URL.createObjectURL(file);
-      console.log('file size: ' + Math.round(file.size / (1024 * 1024)) + ' MB');
-      console.log("Setting video source - timestamp: ");
-      console.log(new Date(Date.now()).toTimeString());
+      setIsNewUpload(true);
       setVideoSrc(objectUrl);
 
       // Clean up the previous object URL if it exists
@@ -37,15 +36,20 @@ const VideoUploadAndPlayer = ({videoRef, }: VideoUploadAndPlayerProps) => {
     };
   }, [videoSrc]);
 
+  // Whenever cues change (e.g. when new subtitles are fixed), we want to reset the text tracks on the video element to reflect the new cues
+  useEffect(() => {
+    resetVideoTextTracks();
+  }, [cues]);
+
+  // Whenever a new video is uploaded (and able to play through), we want to reset the text tracks on the video element to reflect our cues 
   const handleCanPlayThrough = () => {
-    console.log('Video can play through - timestamp: ');
-    console.log(new Date(Date.now()).toTimeString());
+    if (isNewUpload) {
+      resetVideoTextTracks();
+    }
+    setIsNewUpload(false);
+  };
 
-    console.log("videoRef");
-    console.log(videoRef);
-    console.log("videoRef.current");
-    console.log(videoRef.current);
-
+  const resetVideoTextTracks = () => {
     if (videoRef.current) {
       const tracks = videoRef.current.textTracks;
       
@@ -57,21 +61,24 @@ const VideoUploadAndPlayer = ({videoRef, }: VideoUploadAndPlayerProps) => {
 
       // Remove existing cues from all text tracks (theoretically, there should only be one)
       for (let i = 0; i < tracks.length; i++) {
-        // Iterate over the active cues and remove them
+        // Iterate over the cues and active cues and remove them
         const track = tracks[i];
-        const activeCues = track.activeCues;
-        if (activeCues) {
-          for (let j = 0; j < track.activeCues.length; j++) {
-            track.removeCue(activeCues[j]);
-          }
-        }
+        const oldCues = Array.from(track.cues || []);
+        oldCues.forEach(cue => {
+          track.removeCue(cue);
+        });
+        const oldActiveCues = Array.from(track.activeCues || []);
+        oldActiveCues.forEach(cue => {
+          track.removeCue(cue);
+        });
       }
 
-      const newCue = new VTTCue(1, 5, "This is a test subtitle.");
-      tracks[0].addCue(newCue);
-      const cue: VTTCue = ((tracks[0].cues as TextTrackCueList)[0] as VTTCue);
-      console.log("cue.text");
-      console.log(cue.text);
+      cues.forEach(cue => {
+        tracks[0].addCue(cue);
+      });
+      if (cues[0] && cues[0].startTime) {
+      videoRef.current.currentTime = cues[0].startTime;
+      };
     }
   };
 

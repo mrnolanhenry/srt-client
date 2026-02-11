@@ -10,6 +10,7 @@ import InputContainer from './components/InputContainer/InputContainer';
 import OutputContainer from './components/OutputContainer/OutputContainer';
 import VideoUploadAndPlayer from './components/VideoUploadAndPlayer/VideoUploadAndPlayer';
 import StickyFooter from './components/StickyFooter/StickyFooter';
+import SubtitleUtils from './utilities/SubtitleUtils';
 
 function App() {
   const INSTRUCTIONS_TEXT = `Update timecodes on existing .srt files with ease!
@@ -20,6 +21,7 @@ function App() {
   // TODO: Consider making textInputs a single string vs. string[]
   const [textInputs, setTextInputs] = useState<string[]>([INSTRUCTIONS_TEXT]);
   const [textOutput, setTextOutput] = useState<string>('Your fixed .srt file with new timecodes will appear here.');
+  const [cues, setCues] = useState<VTTCue[]>([]);
   const [fileContents, setFileContents] = useState<FileContent[]>([]);
   const [lineStartInput, setLineStartInput] = useState<number>(1);
   const [lineStopInput, setLineStopInput] = useState<number | null>(null);
@@ -62,6 +64,12 @@ function App() {
 
   const handleTextOutputChange = (event: any) => {
     setTextOutput(event.target.value);
+  };
+
+  const handleFixSubtitles = (newData: string) => {
+    const newCues = SubtitleUtils.convertLinesToCues(newData.split("\n"));
+    setCues(newCues);
+    setTextOutput(newData);
   };
 
   const handleHoursChange = (event: any) => {
@@ -131,23 +139,23 @@ function App() {
     }
   };
 
-    const handleDownload = () => {
-      const filename = 'output.srt';
-      downloadTextFile({name: filename, content: textOutput});
-    };
+  const handleDownload = () => {
+    const filename = 'output.srt';
+    downloadTextFile({name: filename, content: textOutput});
+  };
 
-    const downloadTextFile = (file: FileContent) => {
-      const { name, content } = file;
-      const blob = new Blob([content as BlobPart], { type: 'text/plain;charset=utf-8' });
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = name;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      URL.revokeObjectURL(url);
-    };
+  const downloadTextFile = (file: FileContent) => {
+    const { name, content } = file;
+    const blob = new Blob([content as BlobPart], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = name;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
 
   return (
     <>
@@ -163,6 +171,7 @@ function App() {
           <div className="flex-column full-width centered-column">
               <div id="videoUploadRow" className="flex-row section-row centered-row">
                 <VideoUploadAndPlayer
+                  cues={cues}
                   videoRef={videoRef as React.RefObject<HTMLVideoElement>}
                 />
               </div>
@@ -235,7 +244,7 @@ function App() {
                   shouldScrubNonDialogue={shouldScrubNonDialogue}
                   timeInputString={TimeUtils.getDisplayTime(timeInput)}
                   textInput={textInputs[0]}
-                  handleFixCallback={setTextOutput}
+                  handleFixCallback={handleFixSubtitles}
                 />
               </div>
             </div>
