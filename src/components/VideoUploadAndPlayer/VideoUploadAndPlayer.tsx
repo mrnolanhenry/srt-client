@@ -3,9 +3,10 @@ import React, { useState, useRef, useEffect } from 'react';
 interface VideoUploadAndPlayerProps {
   cues: VTTCue[];
   videoRef: React.RefObject<HTMLVideoElement>;
+  timeInput: Date;
 }
 
-const VideoUploadAndPlayer = ({cues, videoRef, }: VideoUploadAndPlayerProps) => {
+const VideoUploadAndPlayer = ({cues, videoRef, timeInput}: VideoUploadAndPlayerProps) => {
   const [videoSrc, setVideoSrc] = useState<string | null>(null);
   const [isNewUpload, setIsNewUpload] = useState(false);
 
@@ -76,8 +77,9 @@ const VideoUploadAndPlayer = ({cues, videoRef, }: VideoUploadAndPlayerProps) => 
       cues.forEach(cue => {
         tracks[0].addCue(cue);
       });
-      if (cues[0] && cues[0].startTime) {
-      videoRef.current.currentTime = cues[0].startTime;
+      if (timeInput) {
+        const timeInputInSeconds = (timeInput.getSeconds() * 1000 + timeInput.getMilliseconds()) / 1000;
+        videoRef.current.currentTime = timeInputInSeconds;
       };
     }
   };

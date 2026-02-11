@@ -173,6 +173,7 @@ function App() {
                 <VideoUploadAndPlayer
                   cues={cues}
                   videoRef={videoRef as React.RefObject<HTMLVideoElement>}
+                  timeInput={timeInput}
                 />
               </div>
           </div>
