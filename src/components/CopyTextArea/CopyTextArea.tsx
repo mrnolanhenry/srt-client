@@ -1,7 +1,5 @@
-import { useState } from 'react';
 import './CopyTextArea.css';
 import CopyTextButton from '../CopyTextButton/CopyTextButton';
-import { COPY_CHARACTER } from '../../constants/constants';
 
 interface CopyTextAreaProps {
   className: string;
@@ -16,23 +14,6 @@ interface CopyTextAreaProps {
 }
 
 const CopyTextArea = ({ className, cols, id, isReadOnly, rows, scrollRef, value, onChange, onScroll }: CopyTextAreaProps) => {
-  const [isCopied, setIsCopied] = useState(false);
-
-  const handleCopy = async () => {
-    if (!navigator.clipboard) {
-      console.warn('Clipboard API not supported');
-      return false;
-    }
-    try {
-      await navigator.clipboard.writeText(value);
-      setIsCopied(true);
-      // Reset the "Copied!" message after timeout
-      setTimeout(() => setIsCopied(false), 1500);
-    } catch (err) {
-      console.error('Failed to copy text: ', err);
-    }
-  };
-
   return (
     <div className="flex-column full-width">
       <div className="flex-row copy-text-row">

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import './CopyTextButton.css';
-import { COPY_CHARACTER } from '../../constants/constants';
+import { COPY_CHAR } from '../../constants/constants';
 
 interface CopyTextButtonProps {
   id: string;
@@ -32,7 +32,7 @@ const CopyTextButton = ({ id, value }: CopyTextButtonProps) => {
           {isCopied ? "" : 'Copy Text'}
         </small>
         {isCopied ? <small>Copied!</small> : ""}
-        <span className="copy-text-character">{COPY_CHARACTER}</span>
+        <span className="copy-text-character">{COPY_CHAR}</span>
       </span>
     </div>
   );

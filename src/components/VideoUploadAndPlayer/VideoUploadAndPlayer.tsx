@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import './VideoUploadAndPlayer.css';
-import { UPLOAD_CHARACTER } from '../../constants/constants';
+import { ARROW_LEFT_CHAR, ARROW_RIGHT_CHAR, SPEECH_BUBBLES_CHAR, UPLOAD_CHAR } from '../../constants/constants';
+import VideoControlButton from '../VideoControlButton/VideoControlButton';
 
 interface VideoUploadAndPlayerProps {
   cues: VTTCue[];
@@ -11,7 +12,7 @@ interface VideoUploadAndPlayerProps {
 const VideoUploadAndPlayer = ({cues, videoRef, timeInput}: VideoUploadAndPlayerProps) => {
   const [videoSrc, setVideoSrc] = useState<string | null>(null);
   const [isNewUpload, setIsNewUpload] = useState(false);
-  const label = `Upload Video ${UPLOAD_CHARACTER}`;
+  const label = `Upload Video ${UPLOAD_CHAR}`;
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -51,6 +52,34 @@ const VideoUploadAndPlayer = ({cues, videoRef, timeInput}: VideoUploadAndPlayerP
       resetVideoTextTracks();
     }
     setIsNewUpload(false);
+  };
+
+  const goToPreviousCue = () => {
+    if (videoRef.current) {
+      const currentTime = videoRef.current.currentTime;
+      const previousCue = cues.findLast((cue: VTTCue) => cue.startTime < currentTime);
+      if (previousCue) {
+        videoRef.current.currentTime = previousCue.startTime;
+        videoRef.current.focus();
+      }
+      else {
+        console.log('No previous subtitle found');
+      }
+    }
+  };
+
+    const goToNextCue = () => {
+    if (videoRef.current) {
+      const currentTime = videoRef.current.currentTime;
+      const nextCue = cues.find(cue => cue.startTime > currentTime);
+      if (nextCue) {
+        videoRef.current.currentTime = nextCue.startTime;
+        videoRef.current.focus();
+      }
+      else {
+        console.log('No next subtitle found');
+      }
+    }
   };
 
   const resetVideoTextTracks = () => {
@@ -111,8 +140,21 @@ const VideoUploadAndPlayer = ({cues, videoRef, timeInput}: VideoUploadAndPlayerP
           </label>
         </button>
       </div>
-      <div id="videoUploadRow" className="flex-row centered-row padded-row">
-
+      <div id="videoControlsRow" className="flex-row centered-row padded-row">
+        <VideoControlButton
+          controlText={ARROW_LEFT_CHAR}
+          hoverText="Previous Subtitle"
+          handleClick={goToPreviousCue}
+        />
+        <VideoControlButton
+          isClickable={false}
+          controlText={SPEECH_BUBBLES_CHAR}
+        />
+        <VideoControlButton
+          controlText={ARROW_RIGHT_CHAR}
+          hoverText="Next Subtitle"
+          handleClick={goToNextCue}
+        />
       </div>
     </>
   );

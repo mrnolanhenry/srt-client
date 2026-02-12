@@ -24,6 +24,6 @@
 }
 
 .video-upload-button:hover {
-    background-color: color-mix(in oklab, rgba(82, 131, 136, 1) 75%, black);
-    border-color: color-mix(in oklab, rgba(82, 131, 136, 1) 75%, black);
+    background-color: color-mix(in oklab, rgba(116, 184, 192, 0.5) 90%, black);
+    border-color: color-mix(in oklab, rgba(116, 184, 192, 0.5) 90%, black);
 }

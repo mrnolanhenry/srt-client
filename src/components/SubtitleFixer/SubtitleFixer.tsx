@@ -167,7 +167,7 @@ const SubtitleFixer = ({ lineStartInput, lineStopInput, shouldScrubNonDialogue, 
   
   return (
     <>
-      <button id="btnFix" onClick={handleFix}>Fix</button>
+      <button id="btnFix" onClick={handleFix}>Fix Subtitles</button>
     </>
   );
 };

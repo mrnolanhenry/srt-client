@@ -1,0 +1,44 @@
+.video-control-fake-button,
+.video-control-button {
+    position: absolute;
+    margin: 16px 22px 0 0;
+    float: right;
+    z-index: 999;
+    transition: .3s;
+    color: white;
+    text-shadow: 2px 2px 15px rgba(0, 0, 0);
+}
+
+.video-control-button {
+    cursor: pointer;
+}
+
+.video-control-hover {
+    /* display: none; */
+    visibility: hidden;
+    color: #aaa;
+    margin-bottom: 14px;
+    text-wrap-mode: nowrap;
+}
+
+.video-control-button-container {
+    max-width: 40px;
+}
+
+.video-control-button-container:hover {
+    .video-control-hover {
+        /* display: block; */
+        visibility: visible;
+    }
+}
+
+.video-control-span {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.video-control-character {
+    padding-left: 4px;
+}
