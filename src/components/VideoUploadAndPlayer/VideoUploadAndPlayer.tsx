@@ -12,6 +12,8 @@ interface VideoUploadAndPlayerProps {
 const VideoUploadAndPlayer = ({cues, videoRef, timeInput}: VideoUploadAndPlayerProps) => {
   const [videoSrc, setVideoSrc] = useState<string | null>(null);
   const [isNewUpload, setIsNewUpload] = useState(false);
+  const [isFocused, setIsFocused] = useState(false);
+  const [shouldHideControls, setShouldHideControls] = useState(false);
   const label = `Upload Video ${UPLOAD_CHAR}`;
 
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -40,6 +42,14 @@ const VideoUploadAndPlayer = ({cues, videoRef, timeInput}: VideoUploadAndPlayerP
       }
     };
   }, [videoSrc]);
+
+  useEffect(() => {
+    console.log('-----------------------------------')
+    console.log('Video paused:', videoRef.current && videoRef.current.paused);
+    console.log('Video focused:', isFocused);
+    console.log('Should hide controls:', !isFocused && videoRef.current && !videoRef.current.paused);
+    setShouldHideControls(!isFocused && videoRef.current && !videoRef.current.paused);
+  }, [videoRef.current && videoRef.current.paused, isFocused]);
 
   // Whenever cues change (e.g. when new subtitles are fixed), we want to reset the text tracks on the video element to reflect the new cues
   useEffect(() => {
@@ -125,7 +135,11 @@ const VideoUploadAndPlayer = ({cues, videoRef, timeInput}: VideoUploadAndPlayerP
           ref={videoRef}
           src={videoSrc as string}
           width="670"
+          onBlur={() => setIsFocused(false)}
           onCanPlayThrough={handleCanPlayThrough}
+          onFocus={() => setIsFocused(true)}
+          onMouseEnter={() => setIsFocused(true)}
+          onMouseLeave={() => setIsFocused(false)}
         />
         <button className="video-upload-button">
           <input
@@ -139,7 +153,7 @@ const VideoUploadAndPlayer = ({cues, videoRef, timeInput}: VideoUploadAndPlayerP
             {label}
           </label>
         </button>
-        <div id="videoControlsRow" className="flex-row centered-row padded-row">
+        <div id="videoControlsRow" className={`flex-row centered-row padded-row ${shouldHideControls ? 'hidden' : ''}`}>
           <VideoControlButton
             controlText={ARROW_LEFT_CHAR}
             hoverText="Previous Subtitle"
