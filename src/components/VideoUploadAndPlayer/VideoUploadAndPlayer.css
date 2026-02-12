@@ -18,7 +18,7 @@
 
 #videoControlsRow {
     position: absolute;
-    margin: 270px 320px 0px 0px;
+    margin: 270px 300px 0px 0px;
     z-index: 999;
     transition: .3s;
     color: white;
@@ -36,10 +36,4 @@
 .video-upload-button:hover {
     background-color: color-mix(in oklab, rgba(116, 184, 192, 0.5) 90%, black);
     border-color: color-mix(in oklab, rgba(116, 184, 192, 0.5) 90%, black);
-}
-
-
-#videoControlsRow {
-    .video-control-button-container:hover {
-    }
 }
