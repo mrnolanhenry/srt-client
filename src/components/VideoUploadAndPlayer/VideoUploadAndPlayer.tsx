@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import './VideoUploadAndPlayer.css';
 import { ARROW_LEFT_CHAR, ARROW_RIGHT_CHAR, SPEECH_BUBBLES_CHAR, UPLOAD_CHAR } from '../../constants/constants';
 import VideoControlButton from '../VideoControlButton/VideoControlButton';
+import useDebounce from '../../hooks/useDebounce';
 
 interface VideoUploadAndPlayerProps {
   cues: VTTCue[];
@@ -14,6 +15,7 @@ const VideoUploadAndPlayer = ({cues, videoRef, timeInput}: VideoUploadAndPlayerP
   const [isNewUpload, setIsNewUpload] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
   const [shouldHideControls, setShouldHideControls] = useState(false);
+  const debouncedShouldHideControls = useDebounce(shouldHideControls, 200);
   const label = `Upload Video ${UPLOAD_CHAR}`;
 
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -44,10 +46,6 @@ const VideoUploadAndPlayer = ({cues, videoRef, timeInput}: VideoUploadAndPlayerP
   }, [videoSrc]);
 
   useEffect(() => {
-    console.log('-----------------------------------')
-    console.log('Video paused:', videoRef.current && videoRef.current.paused);
-    console.log('Video focused:', isFocused);
-    console.log('Should hide controls:', !isFocused && videoRef.current && !videoRef.current.paused);
     setShouldHideControls(!isFocused && videoRef.current && !videoRef.current.paused);
   }, [videoRef.current && videoRef.current.paused, isFocused]);
 
@@ -153,7 +151,7 @@ const VideoUploadAndPlayer = ({cues, videoRef, timeInput}: VideoUploadAndPlayerP
             {label}
           </label>
         </button>
-        <div id="videoControlsRow" className={`flex-row centered-row padded-row ${shouldHideControls ? 'hidden' : ''}`}>
+        <div id="videoControlsRow" className={`flex-row centered-row padded-row ${debouncedShouldHideControls ? 'hidden' : ''}`}>
           <VideoControlButton
             controlText={ARROW_LEFT_CHAR}
             hoverText="Previous Subtitle"
