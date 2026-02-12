@@ -1,3 +1,29 @@
 #videoInput {
     display: none;
 }
+
+.video-upload-button {
+    position: absolute;
+    /* position: fixed; */
+    margin: 0 480px 320px 0px;
+    /* float: left; */
+    z-index: 999;
+    cursor: pointer;
+    transition: .3s;
+    color: white;
+    text-shadow: 2px 2px 15px rgba(0, 0, 0);
+    background-color: transparent;
+    border: none;
+    font-size: 14px;
+    padding: 6px;
+    margin: 0 530px 330px 0px;
+}
+
+.video-upload-label {
+    cursor: pointer;
+}
+
+.video-upload-button:hover {
+    background-color: color-mix(in oklab, rgba(82, 131, 136, 1) 75%, black);
+    border-color: color-mix(in oklab, rgba(82, 131, 136, 1) 75%, black);
+}

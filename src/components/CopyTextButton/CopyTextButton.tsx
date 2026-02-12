@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import './CopyTextButton.css';
+import { COPY_CHARACTER } from '../../constants/constants';
 
 interface CopyTextButtonProps {
   id: string;
@@ -8,8 +9,6 @@ interface CopyTextButtonProps {
 
 const CopyTextButton = ({ id, value }: CopyTextButtonProps) => {
   const [isCopied, setIsCopied] = useState(false);
-
-  const COPY_CHARACTER = '\u{1F5D0}';
 
   const handleCopy = async () => {
     if (!navigator.clipboard) {

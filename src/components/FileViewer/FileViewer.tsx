@@ -3,6 +3,7 @@ import type { FileContent } from '../../interfaces/FileContent';
 import './FileViewer.css';
 import FileUpload from '../FileUpload/FileUpload';
 import CopyTextArea from '../CopyTextArea/CopyTextArea';
+import { UPLOAD_CHARACTER } from '../../constants/constants';
 
 interface FileViewerProps {
   fileContents: FileContent[];
@@ -12,7 +13,7 @@ interface FileViewerProps {
 const FileViewer = ({ fileContents, handleUploadCallback }: FileViewerProps) => {
   // const [activeTab, setActiveTab] = useState<string>(fileContents && fileContents.length ? fileContents[0].name : "");
   const [activeTab, setActiveTab] = useState<string>("");
-  const uploadFilesLabel = fileContents.length === 0 ? "Upload Files" : "Upload More Files";
+  const uploadFilesLabel = `Upload ${fileContents.length === 0 ? "" : "More"} Files ${UPLOAD_CHARACTER}`;
 
     useEffect(() => {
       // console.log('useEffect - fileInputs changed:');

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import './CopyTextArea.css';
 import CopyTextButton from '../CopyTextButton/CopyTextButton';
+import { COPY_CHARACTER } from '../../constants/constants';
 
 interface CopyTextAreaProps {
   className: string;
@@ -16,8 +17,6 @@ interface CopyTextAreaProps {
 
 const CopyTextArea = ({ className, cols, id, isReadOnly, rows, scrollRef, value, onChange, onScroll }: CopyTextAreaProps) => {
   const [isCopied, setIsCopied] = useState(false);
-
-  const COPY_CHARACTER = '\u{1F5D0}';
 
   const handleCopy = async () => {
     if (!navigator.clipboard) {
@@ -42,15 +41,6 @@ const CopyTextArea = ({ className, cols, id, isReadOnly, rows, scrollRef, value,
         ) : (
           <textarea ref={scrollRef ?? null} id={id} className={`${className} copy-text-area`} name={id} rows={rows} cols={cols} onChange={onChange} onScroll={onScroll} value={value}></textarea>
         )}
-        <div className="copy-text-button" onClick={handleCopy}>
-          <span className="copy-text-span">
-            <small className="copy-text-hover">
-              {isCopied ? "" : 'Copy Text'}
-            </small>
-            {isCopied ? <small>Copied!</small> : ""}
-            <span className="copy-text-character">{COPY_CHARACTER}</span>
-          </span>
-        </div>
         <CopyTextButton
           id="copyTextButton"
           value={value}

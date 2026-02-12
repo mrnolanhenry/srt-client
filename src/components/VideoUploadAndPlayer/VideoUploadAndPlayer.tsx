@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import './VideoUploadAndPlayer.css';
+import { UPLOAD_CHARACTER } from '../../constants/constants';
 
 interface VideoUploadAndPlayerProps {
   cues: VTTCue[];
@@ -10,7 +11,7 @@ interface VideoUploadAndPlayerProps {
 const VideoUploadAndPlayer = ({cues, videoRef, timeInput}: VideoUploadAndPlayerProps) => {
   const [videoSrc, setVideoSrc] = useState<string | null>(null);
   const [isNewUpload, setIsNewUpload] = useState(false);
-  const label = "Upload Video";
+  const label = `Upload Video ${UPLOAD_CHARACTER}`;
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -97,9 +98,7 @@ const VideoUploadAndPlayer = ({cues, videoRef, timeInput}: VideoUploadAndPlayerP
           width="670"
           onCanPlayThrough={handleCanPlayThrough}
         />
-      </div>
-      <div id="videoUploadRow">
-        <button>
+                <button className="video-upload-button">
           <input
                 id="videoInput"
             type="file"
@@ -111,6 +110,9 @@ const VideoUploadAndPlayer = ({cues, videoRef, timeInput}: VideoUploadAndPlayerP
             {label}
           </label>
         </button>
+      </div>
+      <div id="videoUploadRow" className="flex-row centered-row padded-row">
+
       </div>
     </>
   );
