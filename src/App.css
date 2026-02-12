@@ -7,11 +7,10 @@
 }
 
 #mainContent {
-  height: calc(100vh - 60px);
-}
-
-#footerSpacer {
-  margin-bottom: 60px; /* Height of the sticky footer */
+  /* height: calc(100vh - 60px); */
+  flex-direction: column;
+  flex: 1;
+  margin-bottom: 60px; /* height of the footer */
 }
 
 .flex-column {
@@ -121,14 +120,9 @@ textarea.no-resize {
   margin-bottom: .5rem;
 }
 
-#inputContainerColumn {
-  width: 50%;
-}
-
-#outputContainerColumn {
-  width: 50%;
-}
-
+#inputContainerColumn,
+#outputContainerColumn,
+#videoContainerColumn,
 #controlColumn {
   width: 50%;
 }
@@ -136,11 +130,9 @@ textarea.no-resize {
 #headerRow {
   border-bottom: 1px solid white;
   box-sizing: border-box;
-  padding-bottom: 1rem;
   align-items: center;
-
   text-align: start;
-  h3 {
+  h4 {
     margin: .5rem 0 .5rem 0;
   }
   small {
@@ -156,8 +148,4 @@ textarea.no-resize {
 #btnDownload:hover {
     background-color: color-mix(in oklab, rgba(155, 157, 103, 1) 90%, black);
     border-color: color-mix(in oklab, rgba(155, 157, 103, 1) 90%, black);
-}
-
-#controlRow {
-  padding-top: 8px;
 }

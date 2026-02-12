@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import './VideoUploadAndPlayer.css';
 
 interface VideoUploadAndPlayerProps {
   cues: VTTCue[];
@@ -9,6 +10,7 @@ interface VideoUploadAndPlayerProps {
 const VideoUploadAndPlayer = ({cues, videoRef, timeInput}: VideoUploadAndPlayerProps) => {
   const [videoSrc, setVideoSrc] = useState<string | null>(null);
   const [isNewUpload, setIsNewUpload] = useState(false);
+  const label = "Upload Video";
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -85,27 +87,32 @@ const VideoUploadAndPlayer = ({cues, videoRef, timeInput}: VideoUploadAndPlayerP
   };
 
   return (
-    <div>
-      <span>Upload and Play Video</span>
-      <input
-        type="file"
-        accept="video/*"
-        onChange={handleVideoUpload}
-        ref={fileInputRef}
-      />
-      {videoSrc && (
-        <div style={{ marginTop: '20px' }}>
-          <video
-            controls // Adds default browser controls (play, pause, etc.)
-            height="300"
-            ref={videoRef}
-            src={videoSrc}
-            width="600"
-            onCanPlayThrough={handleCanPlayThrough}
+    <>
+      <div id="videoRow" className="flex-row centered-row">
+        <video
+          controls // Adds default browser controls (play, pause, etc.)
+          height="385"
+          ref={videoRef}
+          src={videoSrc as string}
+          width="670"
+          onCanPlayThrough={handleCanPlayThrough}
+        />
+      </div>
+      <div id="videoUploadRow">
+        <button>
+          <input
+                id="videoInput"
+            type="file"
+            accept="video/*"
+            onChange={handleVideoUpload}
+            ref={fileInputRef}
           />
-        </div>
-      )}
-    </div>
+          <label htmlFor="videoInput" className="video-upload-label">
+            {label}
+          </label>
+        </button>
+      </div>
+    </>
   );
 };
 

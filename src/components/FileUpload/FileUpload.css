@@ -1,8 +1,5 @@
 #srtInputFile {
     display: none;
-    /* could use display: none, but this is better for accessibility purposes */
-    /* position: absolute;
-    bottom: -300px; */
 }
 
 .file-upload-label {
