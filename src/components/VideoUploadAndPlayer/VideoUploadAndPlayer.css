@@ -1,3 +1,7 @@
+#videoRow video {
+    border-radius: 16px;
+}
+
 #videoInput {
     display: none;
 }
