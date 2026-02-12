@@ -24,7 +24,8 @@
 .video-control-hover {
     /* display: none; */
     visibility: hidden;
-    color: #aaa;
+    color: white;
+    text-shadow: 2px 2px 15px rgba(0, 0, 0);
     margin-bottom: 14px;
     text-wrap-mode: nowrap;
 }
