@@ -127,9 +127,9 @@ const VideoUploadAndPlayer = ({cues, videoRef, timeInput}: VideoUploadAndPlayerP
           width="670"
           onCanPlayThrough={handleCanPlayThrough}
         />
-                <button className="video-upload-button">
+        <button className="video-upload-button">
           <input
-                id="videoInput"
+            id="videoInput"
             type="file"
             accept="video/*"
             onChange={handleVideoUpload}
@@ -139,22 +139,22 @@ const VideoUploadAndPlayer = ({cues, videoRef, timeInput}: VideoUploadAndPlayerP
             {label}
           </label>
         </button>
-      </div>
-      <div id="videoControlsRow" className="flex-row centered-row padded-row">
-        <VideoControlButton
-          controlText={ARROW_LEFT_CHAR}
-          hoverText="Previous Subtitle"
-          handleClick={goToPreviousCue}
-        />
-        <VideoControlButton
-          isClickable={false}
-          controlText={SPEECH_BUBBLES_CHAR}
-        />
-        <VideoControlButton
-          controlText={ARROW_RIGHT_CHAR}
-          hoverText="Next Subtitle"
-          handleClick={goToNextCue}
-        />
+        <div id="videoControlsRow" className="flex-row centered-row padded-row">
+          <VideoControlButton
+            controlText={ARROW_LEFT_CHAR}
+            hoverText="Previous Subtitle"
+            handleClick={goToPreviousCue}
+          />
+          <VideoControlButton
+            isClickable={false}
+            controlText={SPEECH_BUBBLES_CHAR}
+          />
+          <VideoControlButton
+            controlText={ARROW_RIGHT_CHAR}
+            hoverText="Next Subtitle"
+            handleClick={goToNextCue}
+          />
+        </div>
       </div>
     </>
   );
