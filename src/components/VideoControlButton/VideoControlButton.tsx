@@ -4,30 +4,33 @@ interface VideoControlButtonProps {
     controlText: string;
     hoverText?: string;
     isClickable?: boolean;
+    isDisabled: boolean;
     handleClick?: () => void;
 }
 
-const VideoControlButton = ({controlText, hoverText, isClickable, handleClick}: VideoControlButtonProps) => {
-    const defaultClickable = true;
-    isClickable = isClickable ?? defaultClickable;
+const VideoControlButton = ({controlText, hoverText, isClickable, isDisabled, handleClick}: VideoControlButtonProps) => {
+  const defaultClickable = true;
+  isClickable = isClickable ?? defaultClickable;
     
   return (
     isClickable ? (
-        <div className="video-control-button-container">
+        <div className={`video-control-button-container ${isDisabled ? 'disabled' : ''}`}>
           <div className="video-control-span">
             {hoverText && (
             <small className="video-control-hover">
               {hoverText}
             </small>
             )}
-            <div className="video-control-button" onClick={handleClick}>
+            <button className={`video-control-button ${isDisabled ? 'disabled' : ''}`} onClick={handleClick}>
               <span className="video-control-character">{controlText}</span>
-            </div>
+            </button>
           </div>
         </div>) : (
-        <div className="video-control-span">
-          <div className="video-control-fake-button">
-            <span className="video-control-character">{controlText}</span>
+        <div className={`video-control-button-container ${isDisabled ? 'disabled' : ''}`}>
+          <div className="video-control-span">
+            <button className={`video-control-fake-button ${isDisabled ? 'disabled' : ''}`}>
+              <span className="video-control-character">{controlText}</span>
+            </button>
           </div>
         </div>
     )

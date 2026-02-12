@@ -13,8 +13,10 @@ interface VideoUploadAndPlayerProps {
 const VideoUploadAndPlayer = ({cues, videoRef, timeInput}: VideoUploadAndPlayerProps) => {
   const [videoSrc, setVideoSrc] = useState<string | null>(null);
   const [isNewUpload, setIsNewUpload] = useState(false);
-  const [isFocused, setIsFocused] = useState(false);
+  const [isControlFocused, setIsControlFocused] = useState(false);
+  const [isVideoFocused, setIsVideoFocused] = useState(false);
   const [shouldHideControls, setShouldHideControls] = useState(false);
+  const [shouldDisableControls, setShouldDisableControls] = useState(true);
   const debouncedShouldHideControls = useDebounce(shouldHideControls, 200);
   const label = `Upload Video ${UPLOAD_CHAR}`;
 
@@ -45,9 +47,21 @@ const VideoUploadAndPlayer = ({cues, videoRef, timeInput}: VideoUploadAndPlayerP
     };
   }, [videoSrc]);
 
+  // enable custom controls on video player when video has a src, disable otherwise.
   useEffect(() => {
-    setShouldHideControls(!isFocused && videoRef.current && !videoRef.current.paused);
-  }, [videoRef.current && videoRef.current.paused, isFocused]);
+      if (videoSrc) {
+        setShouldDisableControls(false);
+      }
+      else {
+        setShouldDisableControls(true);
+      }
+  }, [videoSrc]);
+
+  // hide custom controls on video player when video is playing and not focused, similar to OOTB controls
+  // and when our custom controls themselves are not focused
+  useEffect(() => {
+    setShouldHideControls(!isControlFocused && !isVideoFocused && videoRef.current && !videoRef.current.paused);
+  }, [videoRef.current && videoRef.current.paused, isVideoFocused]);
 
   // Whenever cues change (e.g. when new subtitles are fixed), we want to reset the text tracks on the video element to reflect the new cues
   useEffect(() => {
@@ -133,13 +147,17 @@ const VideoUploadAndPlayer = ({cues, videoRef, timeInput}: VideoUploadAndPlayerP
           ref={videoRef}
           src={videoSrc as string}
           width="670"
-          onBlur={() => setIsFocused(false)}
+          onBlur={() => setIsVideoFocused(false)}
           onCanPlayThrough={handleCanPlayThrough}
-          onFocus={() => setIsFocused(true)}
-          onMouseEnter={() => setIsFocused(true)}
-          onMouseLeave={() => setIsFocused(false)}
+          onFocus={() => setIsVideoFocused(true)}
+          onMouseEnter={() => setIsVideoFocused(true)}
+          onMouseLeave={() => setIsVideoFocused(false)}
         />
-        <button className="video-upload-button">
+        <button className={`video-upload-button ${debouncedShouldHideControls ? 'hidden' : ''}`}
+          onBlur={() => setIsControlFocused(false)}
+          onFocus={() => setIsControlFocused(true)}
+          onMouseEnter={() => setIsControlFocused(true)}
+          onMouseLeave={() => setIsControlFocused(false)}>
           <input
             id="videoInput"
             type="file"
@@ -151,19 +169,26 @@ const VideoUploadAndPlayer = ({cues, videoRef, timeInput}: VideoUploadAndPlayerP
             {label}
           </label>
         </button>
-        <div id="videoControlsRow" className={`flex-row centered-row padded-row ${debouncedShouldHideControls ? 'hidden' : ''}`}>
+        <div id="videoControlsRow" className={`flex-row centered-row padded-row ${debouncedShouldHideControls ? 'hidden' : ''}`}
+          onBlur={() => setIsControlFocused(false)}
+          onFocus={() => setIsControlFocused(true)}
+          onMouseEnter={() => setIsControlFocused(true)}
+          onMouseLeave={() => setIsControlFocused(false)}>
           <VideoControlButton
             controlText={ARROW_LEFT_CHAR}
             hoverText="Previous Subtitle"
+            isDisabled={shouldDisableControls}
             handleClick={goToPreviousCue}
           />
           <VideoControlButton
-            isClickable={false}
             controlText={SPEECH_BUBBLES_CHAR}
+            isClickable={false}
+            isDisabled={shouldDisableControls}
           />
           <VideoControlButton
             controlText={ARROW_RIGHT_CHAR}
             hoverText="Next Subtitle"
+            isDisabled={shouldDisableControls}
             handleClick={goToNextCue}
           />
         </div>

@@ -176,7 +176,7 @@ function App() {
             </div>
           </div>
           <div className="flex-column full-width centered-column">
-            <div className="flex-row">
+            <div className="section-row flex-row">
               <div id="controlColumn" className="flex-column centered-column">
                 <div className="section-row flex-row spaced-between-row full-width">
                   <div className="flex-column padded-column">

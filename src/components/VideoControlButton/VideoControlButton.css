@@ -7,10 +7,18 @@
     transition: .3s;
     color: white;
     text-shadow: 2px 2px 15px rgba(0, 0, 0);
+    background-color: transparent;
+    border-width: 0;
+    padding: 0;
 }
 
-.video-control-button {
-    cursor: pointer;
+.video-control-fake-button.disabled,
+.video-control-button.disabled {
+    color: #5B5B5B;
+}
+
+.video-control-fake-button {
+    cursor: default;
 }
 
 .video-control-hover {
@@ -25,9 +33,9 @@
     max-width: 40px;
 }
 
-.video-control-button-container:hover {
+.video-control-button-container:has(.video-control-character:hover)
+ {
     .video-control-hover {
-        /* display: block; */
         visibility: visible;
     }
 }
