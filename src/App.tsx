@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import './App.css';
 import Time from './classes/Time';
+import ControlsContainer from './components/ControlsContainer/ControlsContainer';
 import InputContainer from './components/InputContainer/InputContainer';
 import OutputContainer from './components/OutputContainer/OutputContainer';
 import StickyFooter from './components/StickyFooter/StickyFooter';
@@ -10,7 +11,6 @@ import useDebounce from './hooks/useDebounce';
 import type { FileContent } from './interfaces/FileContent';
 import TimeUtils from './utilities/TimeUtils';
 import SubtitleUtils from './utilities/SubtitleUtils';
-import ControlsContainer from './components/ControlsContainer/ControlsContainer';
 
 function App() {
   const INSTRUCTIONS_TEXT = `Update timecodes on existing .srt files with ease!
@@ -207,7 +207,7 @@ function App() {
                   handleScroll={handleScroll}
                   handleTextInputChange={handleTextInputChange}
                   setFileContents={setFileContents} 
-                />
+                /> 
               </div>
               <div id="outputContainerColumn" className="flex-column padded-column">
                 <OutputContainer

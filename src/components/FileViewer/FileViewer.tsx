@@ -33,7 +33,7 @@ const FileViewer = ({ fileContents, handleUploadCallback }: FileViewerProps) => 
   return (
     <>
       {fileContents.length > 0 ? (
-        <div className="inner-tabcontent-container">
+        <>
           <div className="flex-row">
             <div className="flex-column file-viewer-tab">
               <div id="fileUploadColumn" className="flex-column">
@@ -65,15 +65,13 @@ const FileViewer = ({ fileContents, handleUploadCallback }: FileViewerProps) => 
             ))}
           </div>
           <div className="clearfix"></div>
-        </div>
+        </>
       ) : (
-        <div className="inner-tabcontent-container padded-container">
-          <div className="flex-row padded-row">
-              <FileUpload
-                  label={uploadFilesLabel}
-                  handleUploadCallback={handleUploadCallback} 
-              />
-          </div>
+        <div className="flex-row padded-row">
+            <FileUpload
+                label={uploadFilesLabel}
+                handleUploadCallback={handleUploadCallback} 
+            />
         </div>
       )}
     </>

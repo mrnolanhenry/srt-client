@@ -1,44 +1,22 @@
-.input-tab-content-row {
-  height: 400px;
-  box-sizing: border-box;
-  border-radius: 0 8px 8px 8px;
-  background-color: rgba(82, 131, 136, 1);
-}
+#inputContainer {
+  .tab-content-row {
+    height: 400px;
+    background-color: rgba(82, 131, 136, 1);
+    border-color: rgba(82, 131, 136, 1);
+  }
 
-.input-container-tab {
-  overflow: hidden;
-}
+  .tabbed-container-tab button {
+      background-color: color-mix(in oklab, rgba(82, 131, 136, 1) 75%, black);
+      border: 1px solid color-mix(in oklab, rgba(82, 131, 136, 1) 75%, black);
+  }
 
-.input-container-tab button {
-    background-color: color-mix(in oklab, rgba(82, 131, 136, 1) 75%, black);
-    float: left;
-    border: 1px solid color-mix(in oklab, rgba(82, 131, 136, 1) 75%, black);
-    -moz-border-radius: 0px;
-    -webkit-border-radius: 8px 8px 0px 0px;
-    border-radius: 8px 8px 0px 0px;
-    outline: none;
-}
+  .tabbed-container-tab button:hover {
+    background-color: color-mix(in oklab, rgba(82, 131, 136, 1) 90%, black);
+    border-color: color-mix(in oklab, rgba(82, 131, 136, 1) 90%, black);
+  }
 
-.input-container-tab button:hover {
-  background-color: color-mix(in oklab, rgba(82, 131, 136, 1) 90%, black);
-  border-color: color-mix(in oklab, rgba(82, 131, 136, 1) 90%, black);
+  .tabbed-container-tab button.active {
+    background-color: rgba(82, 131, 136, 1);
+    border-color: rgba(82, 131, 136, 1);
+  }
 }
-
-.input-container-tab button.active {
-  background-color: rgba(82, 131, 136, 1);
-  border-color: rgba(82, 131, 136, 1);
-}
-
-.input-container-tabcontent {
-  padding: 0;
-  height: 100%;
-}
-
-.inner-tabcontent-container {
-  height: 100%;
-}
-
-.padded-container {
-  padding: 16px;
-}
-

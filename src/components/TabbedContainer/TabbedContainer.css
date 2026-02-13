@@ -1,0 +1,37 @@
+.tab-content-row {
+  height: 400px;
+  box-sizing: border-box;
+  /* background-color: rgba(82, 131, 136, 1); */
+  border-radius: 0 8px 8px 8px;
+  border-style: solid;
+  border-width: 1px;
+}
+
+.tabbed-container-tab {
+  overflow: hidden;
+}
+
+.tabbed-container-tab button {
+    /* background-color: color-mix(in oklab, rgba(82, 131, 136, 1) 75%, black); */
+    border: 1px solid color-mix(in oklab, rgba(82, 131, 136, 1) 75%, black);
+    border-bottom-color: transparent;
+    float: left;
+    -moz-border-radius: 0px;
+    -webkit-border-radius: 8px 8px 0px 0px;
+    border-radius: 8px 8px 0px 0px;
+    outline: none;
+}
+
+.tabbed-container-tabcontent {
+  padding: 0;
+  height: 100%;
+}
+
+.inner-tabcontent-container {
+  height: 100%;
+}
+
+.padded-container {
+  padding: 16px;
+}
+
