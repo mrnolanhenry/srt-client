@@ -17,12 +17,21 @@
     border: none;
     font-size: 14px;
     padding: 6px;
-    margin: 0 530px 330px 0px;
+    margin: 0 515px 310px 0px;
+}
+
+.video-upload-button:hover {
+    background-color: color-mix(in oklab, rgba(116, 184, 192, 0.5) 90%, black);
+    border-color: color-mix(in oklab, rgba(116, 184, 192, 0.5) 90%, black);
+}
+
+.video-upload-label {
+    cursor: pointer;
 }
 
 #videoControlsRow {
     position: absolute;
-    margin: 270px 300px 0px 0px;
+    margin: 255px 270px 0px 0px;
     z-index: 999;
     transition: .3s;
     color: white;
@@ -31,13 +40,4 @@
     border: none;
     font-size: 14px;
     padding: 6px;
-}
-
-.video-upload-label {
-    cursor: pointer;
-}
-
-.video-upload-button:hover {
-    background-color: color-mix(in oklab, rgba(116, 184, 192, 0.5) 90%, black);
-    border-color: color-mix(in oklab, rgba(116, 184, 192, 0.5) 90%, black);
 }

@@ -143,10 +143,10 @@ const VideoUploadAndPlayer = ({cues, videoRef, timeInput}: VideoUploadAndPlayerP
       <div id="videoRow" className="flex-row centered-row">
         <video
           controls // Adds default browser controls (play, pause, etc.)
-          height="385"
+          height="370"
           ref={videoRef}
           src={videoSrc as string}
-          width="670"
+          width="640"
           onBlur={() => setIsVideoFocused(false)}
           onCanPlayThrough={handleCanPlayThrough}
           onFocus={() => setIsVideoFocused(true)}

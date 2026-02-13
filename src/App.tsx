@@ -6,11 +6,11 @@ import InputContainer from './components/InputContainer/InputContainer';
 import OutputContainer from './components/OutputContainer/OutputContainer';
 import StickyFooter from './components/StickyFooter/StickyFooter';
 import SubtitleFixer from './components/SubtitleFixer/SubtitleFixer';
-import VideoUploadAndPlayer from './components/VideoUploadAndPlayer/VideoUploadAndPlayer';
 import useDebounce from './hooks/useDebounce';
 import type { FileContent } from './interfaces/FileContent';
 import TimeUtils from './utilities/TimeUtils';
 import SubtitleUtils from './utilities/SubtitleUtils';
+import VideoContainer from './components/VideoContainer/VideoContainer';
 
 function App() {
   const INSTRUCTIONS_TEXT = `Update timecodes on existing .srt files with ease!
@@ -28,8 +28,6 @@ function App() {
   const [timeInput, setTimeInput] = useState<Time>(new Time(0, 0, 0, 0));
 
   const shouldScrubNonDialogue = false;
-
-  const videoRef = useRef<HTMLVideoElement>(null);
 
   const refInputTextArea = useRef<HTMLTextAreaElement>(null);
   const refOutputTextArea = useRef<HTMLTextAreaElement>(null);
@@ -175,7 +173,7 @@ function App() {
           </div>
           <div className="flex-column full-width centered-column">
             <div className="section-row flex-row">
-              <div id="controlColumn" className="flex-column centered-column">
+              <div id="controlColumn" className="flex-column centered-column padded-column">
                 <ControlsContainer
                   lineStartInput={lineStartInput}
                   lineStopInput={lineStopInput as number}
@@ -188,11 +186,10 @@ function App() {
                   handleLineStopInputChange={handleLineStopInputChange}
                 />
               </div>
-              <div id="videoContainerColumn" className="flex-column centered-column">
-                <VideoUploadAndPlayer
-                  cues={debouncedCues}
-                  videoRef={videoRef as React.RefObject<HTMLVideoElement>}
-                  timeInput={timeInput}
+              <div id="videoContainerColumn" className="flex-column centered-column padded-column">
+                <VideoContainer
+                    cues={debouncedCues}
+                    timeInput={timeInput}
                 />
               </div>
             </div>
