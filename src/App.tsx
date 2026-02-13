@@ -2,23 +2,21 @@ import { useEffect, useRef, useState } from 'react';
 import './App.css';
 import Time from './classes/Time';
 import InputContainer from './components/InputContainer/InputContainer';
-import LineNumberControl from './components/LineNumberControl/LineNumberControl';
 import OutputContainer from './components/OutputContainer/OutputContainer';
 import StickyFooter from './components/StickyFooter/StickyFooter';
 import SubtitleFixer from './components/SubtitleFixer/SubtitleFixer';
-import TimeControl from './components/TimeControl/TimeControl';
 import VideoUploadAndPlayer from './components/VideoUploadAndPlayer/VideoUploadAndPlayer';
 import useDebounce from './hooks/useDebounce';
 import type { FileContent } from './interfaces/FileContent';
 import TimeUtils from './utilities/TimeUtils';
 import SubtitleUtils from './utilities/SubtitleUtils';
+import ControlsContainer from './components/ControlsContainer/ControlsContainer';
 
 function App() {
   const INSTRUCTIONS_TEXT = `Update timecodes on existing .srt files with ease!
-    \nEnter your subtitles here or upload multiple .srt files using the button below.
+    \nEnter your subtitles here or upload multiple .srt files using the button in the 'Uploaded Files' tab. There you can reference your other files to work with.
     \nBy default, the contents of the first file uploaded will appear here.
-    \nClick the 'Uploaded Files' tab above to work with your other files.
-    \nThen fill in the fields below to adjust the timecodes on specific line numbers and click the 'Fix' button.`;
+    \nMake any edits needed in this tab, then choose settings in the 'Controls' area to adjust the timecodes on specific line numbers and click the 'Fix' button.`;
   // TODO: Consider making textInputs a single string vs. string[]
   const [textInputs, setTextInputs] = useState<string[]>([INSTRUCTIONS_TEXT]);
   const [textOutput, setTextOutput] = useState<string>('Your fixed .srt file with new timecodes will appear here.');
@@ -178,35 +176,17 @@ function App() {
           <div className="flex-column full-width centered-column">
             <div className="section-row flex-row">
               <div id="controlColumn" className="flex-column centered-column">
-                <div className="section-row flex-row spaced-between-row full-width">
-                  <div className="flex-column padded-column">
-                    <LineNumberControl 
-                      lineStartInput={lineStartInput}
-                      lineStopInput={lineStopInput}
-                      handleLineStartInputChange={handleLineStartInputChange}
-                      handleLineStopInputChange={handleLineStopInputChange}
-                    />
-                  </div>
-                  <div className="flex-column padded-column">
-                    <TimeControl 
-                      timeInput={timeInput}
-                      lineStartInput={lineStartInput}
-                      handleHoursChange={handleHoursChange}
-                      handleMinutesChange={handleMinutesChange}
-                      handleSecondsChange={handleSecondsChange}
-                      handleMillisecondsChange={handleMillisecondsChange}
-                    />
-                  </div>
-                </div>
-                <div className="flex-row centered-row full-width">
-                  <div className="flex-column padded-column">
-                    <div className="flex-row centered-row">
-                      <div className="flex-column">
-                        <span>Selected New Time for Line {lineStartInput}: {TimeUtils.getDisplayTime(timeInput)}</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                <ControlsContainer
+                  lineStartInput={lineStartInput}
+                  lineStopInput={lineStopInput as number}
+                  timeInput={timeInput}
+                  handleHoursChange={handleHoursChange}
+                  handleMinutesChange={handleMinutesChange}
+                  handleSecondsChange={handleSecondsChange}
+                  handleMillisecondsChange={handleMillisecondsChange}
+                  handleLineStartInputChange={handleLineStartInputChange}
+                  handleLineStopInputChange={handleLineStopInputChange}
+                />
               </div>
               <div id="videoContainerColumn" className="flex-column centered-column">
                 <VideoUploadAndPlayer

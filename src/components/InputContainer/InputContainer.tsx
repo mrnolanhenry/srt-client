@@ -30,7 +30,7 @@ const InputContainer = ({ fileContents, scrollRef, textInputs, handleScroll, han
         <>
             <div className="flex-row">
                 <div className="input-container-tab">
-                    <button className={`input-container-tablinks ${activeTab === INPUT_SUBTITLES ? 'active' : ''}`} onClick={() => setActiveTab(INPUT_SUBTITLES)}>Edit Subtitles</button>
+                    <button className={`input-container-tablinks ${activeTab === INPUT_SUBTITLES ? 'active' : ''}`} onClick={() => setActiveTab(INPUT_SUBTITLES)}>Input Subtitles</button>
                     <button className={`input-container-tablinks ${activeTab === UPLOADED_FILES ? 'active' : ''}`} onClick={() => setActiveTab(UPLOADED_FILES)}>Uploaded Files</button>
                 </div>
             </div>
