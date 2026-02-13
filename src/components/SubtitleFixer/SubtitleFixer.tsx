@@ -1,4 +1,5 @@
 import StringUtils from "../../utilities/StringUtils";
+import SubtitleUtils from "../../utilities/SubtitleUtils";
 import TimeUtils from "../../utilities/TimeUtils";
 import './SubtitleFixer.css';
 
@@ -66,10 +67,10 @@ const SubtitleFixer = ({ lineStartInput, lineStopInput, shouldScrubNonDialogue, 
     return newSubtitles;
   };
 
-  const sequenceLineNumbers = (dataArr: string[]): string => {
+  const sequenceLineNumbers = (lines: string[]): string => {
     let array: string[] = [];
     let currentLineNumber = 1;
-    dataArr.forEach(line => {
+    lines.forEach(line => {
       let newLine = StringUtils.removeReturnCharacter(line);
       if (StringUtils.isLineNumber(newLine)) {
         // line is a line number
@@ -112,7 +113,7 @@ const SubtitleFixer = ({ lineStartInput, lineStopInput, shouldScrubNonDialogue, 
   
   const getNewLineWithOffset = (line: string, offset: number) => {
     let lineWithReturnRemoved = StringUtils.removeReturnCharacter(line);
-    const {startTimeString, endTimeString} = getStartAndEndString(lineWithReturnRemoved);
+    const {startTimeString, endTimeString} = SubtitleUtils.getStartAndEndString(lineWithReturnRemoved);
     const newStartTime = TimeUtils.convertStringToMillisecs(startTimeString) as number + offset;
     const newEndTime = TimeUtils.convertStringToMillisecs(endTimeString) as number + offset;
     const newStartString = TimeUtils.convertMillisecsToString(newStartTime);
@@ -127,24 +128,12 @@ const SubtitleFixer = ({ lineStartInput, lineStopInput, shouldScrubNonDialogue, 
     // e.g. 00:01:49,111 - 00:01:19,111 would return an offset of -00:00:30,000 and all following times in srt would get modified by this amount.
     const newInitialString = timeInputString;
     const lineNumberToStartOffset = lineStartInput;
-    // console.log('new time: ' + newInitialString);
-    // console.log('line number to start offset: ' + lineNumberToStartOffset);
     const firstLineToOffset = getFirstTimeLineToOffset(dataArr,lineNumberToStartOffset);
-    // console.log('firstLineToOffset', firstLineToOffset);
     const oldInitialString = getInitialTimeString(firstLineToOffset as string) as string;
     const oldInitialTime = TimeUtils.convertStringToMillisecs(oldInitialString) as number;
     const newInitialTime = TimeUtils.convertStringToMillisecs(newInitialString) as number;
-    // console.log('newInitialTime',newInitialTime);
-    // console.log('offset',newInitialTime - oldInitialTime);
     
     return newInitialTime - oldInitialTime;
-  };
-  
-  const getStartAndEndString = (lineString: string) => {
-    const lineArr = lineString.split(" --> ");
-    const startTimeString = lineArr[0];
-    const endTimeString = lineArr[1]
-    return {startTimeString, endTimeString};
   };
   
   const getFirstTimeLineToOffset = (dataArray: string[],lineNumberToStartOffset : number): string | undefined => {
@@ -178,7 +167,7 @@ const SubtitleFixer = ({ lineStartInput, lineStopInput, shouldScrubNonDialogue, 
   
   return (
     <>
-      <button id="btnFix" onClick={handleFix}>Fix</button>
+      <button id="btnFix" onClick={handleFix}>Fix Subtitles</button>
     </>
   );
 };

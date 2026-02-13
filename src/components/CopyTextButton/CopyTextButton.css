@@ -1,7 +1,7 @@
 .copy-text-button {
-    /* position: absolute; */
-    /* TODO: Try this out - revert back to absolute, which was working, if necessary */
-    position: fixed;
+    position: absolute;
+    /* TODO: Try position: fixed for a behavior that might be better for textareas that extend past the bottom of the page */
+    /* position: fixed; */
     margin: 10px 22px 0 0;
     float: right;
     z-index: 999;

@@ -3,6 +3,8 @@ import './InputContainer.css';
 import FileViewer from '../FileViewer/FileViewer';
 import { useState } from 'react';
 import CopyTextArea from '../CopyTextArea/CopyTextArea';
+import TabbedContainer from '../TabbedContainer/TabbedContainer';
+import TabWrapper from '../TabWrapper/TabWrapper';
 
 interface InputContainerProps {
   fileContents: FileContent[];
@@ -26,40 +28,44 @@ const InputContainer = ({ fileContents, scrollRef, textInputs, handleScroll, han
         // setActiveTab(UPLOADED_FILES);
     }
 
+    const handleActiveTab = (tabId: string) => {
+        setActiveTab(tabId);
+    }
+
     return (
         <>
-            <div className="flex-row">
-                <div className="input-container-tab">
-                    <button className={`input-container-tablinks ${activeTab === INPUT_SUBTITLES ? 'active' : ''}`} onClick={() => setActiveTab(INPUT_SUBTITLES)}>Edit Subtitles</button>
-                    <button className={`input-container-tablinks ${activeTab === UPLOADED_FILES ? 'active' : ''}`} onClick={() => setActiveTab(UPLOADED_FILES)}>Uploaded Files</button>
-                </div>
-            </div>
-            <div className="flex-row input-tab-content-row">
-                <div className="flex-column full-width">
-                    <div id="inputSubtitles" className={`input-container-tabcontent padded-container ${activeTab === INPUT_SUBTITLES ? '' : 'hidden'}`}>
-                        <div className="inner-tabcontent-container">
-                            <div className="flex-row">  
-                                <CopyTextArea 
-                                    className="full-width no-resize" 
-                                    cols={50} 
-                                    id="srtInputDisplay"
-                                    rows={23} 
-                                    onChange={handleTextInputChange}
-                                    onScroll={handleScroll}
-                                    scrollRef={scrollRef}
-                                    value={textInputs[0]}
-                                />              
-                            </div>
-                        </div>
+            <TabbedContainer
+                activeTab={activeTab}
+                id="inputContainer"
+                handleActiveTab={handleActiveTab}>
+                <TabWrapper
+                    containerClassNames={`padded-container`}
+                    containerId={INPUT_SUBTITLES}
+                    containerTitle="Input Subtitles">
+                    <div className="flex-row">  
+                        <CopyTextArea 
+                            className="full-width no-resize" 
+                            cols={50} 
+                            id="srtInputDisplay"
+                            rows={23} 
+                            onChange={handleTextInputChange}
+                            onScroll={handleScroll}
+                            scrollRef={scrollRef}
+                            value={textInputs[0]}
+                        />              
                     </div>
-                    <div id="uploadedFiles" className={`input-container-tabcontent ${activeTab === UPLOADED_FILES ? '' : 'hidden'}`}>
-                        <FileViewer 
-                            fileContents={fileContents} 
-                            handleUploadCallback={handleUploadCallback} 
-                        />
-                    </div>
-                </div>
-            </div>
+                </TabWrapper>
+                <TabWrapper
+                    containerClassNames=""
+                    containerId={UPLOADED_FILES}
+                    containerTitle="Uploaded Files"
+                    innerContainerClassNames={`${fileContents.length > 0 ? '' : 'padded-container'}`} >
+                    <FileViewer 
+                        fileContents={fileContents} 
+                        handleUploadCallback={handleUploadCallback}
+                    />
+                </TabWrapper>
+            </TabbedContainer>
         </>
     );
 };

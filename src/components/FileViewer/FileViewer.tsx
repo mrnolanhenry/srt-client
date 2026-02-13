@@ -3,6 +3,7 @@ import type { FileContent } from '../../interfaces/FileContent';
 import './FileViewer.css';
 import FileUpload from '../FileUpload/FileUpload';
 import CopyTextArea from '../CopyTextArea/CopyTextArea';
+import { UPLOAD_CHAR } from '../../constants/constants';
 
 interface FileViewerProps {
   fileContents: FileContent[];
@@ -12,7 +13,7 @@ interface FileViewerProps {
 const FileViewer = ({ fileContents, handleUploadCallback }: FileViewerProps) => {
   // const [activeTab, setActiveTab] = useState<string>(fileContents && fileContents.length ? fileContents[0].name : "");
   const [activeTab, setActiveTab] = useState<string>("");
-  const uploadFilesLabel = fileContents.length === 0 ? "Upload Files" : "Upload More Files";
+  const uploadFilesLabel = `Upload ${fileContents.length === 0 ? "" : "More"} Files ${UPLOAD_CHAR}`;
 
     useEffect(() => {
       // console.log('useEffect - fileInputs changed:');
@@ -32,7 +33,7 @@ const FileViewer = ({ fileContents, handleUploadCallback }: FileViewerProps) => 
   return (
     <>
       {fileContents.length > 0 ? (
-        <div className="inner-tabcontent-container">
+        <>
           <div className="flex-row">
             <div className="flex-column file-viewer-tab">
               <div id="fileUploadColumn" className="flex-column">
@@ -64,15 +65,13 @@ const FileViewer = ({ fileContents, handleUploadCallback }: FileViewerProps) => 
             ))}
           </div>
           <div className="clearfix"></div>
-        </div>
+        </>
       ) : (
-        <div className="inner-tabcontent-container padded-container">
-          <div className="flex-row padded-row">
-              <FileUpload
-                  label={uploadFilesLabel}
-                  handleUploadCallback={handleUploadCallback} 
-              />
-          </div>
+        <div className="flex-row padded-row">
+            <FileUpload
+                label={uploadFilesLabel}
+                handleUploadCallback={handleUploadCallback} 
+            />
         </div>
       )}
     </>

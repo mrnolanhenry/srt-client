@@ -1,6 +1,8 @@
 import './OutputContainer.css';
 import { useState } from 'react';
 import CopyTextArea from '../CopyTextArea/CopyTextArea';
+import TabbedContainer from '../TabbedContainer/TabbedContainer';
+import TabWrapper from '../TabWrapper/TabWrapper';
 
 interface OutputContainerProps {
     scrollRef: React.RefObject<HTMLTextAreaElement>;
@@ -14,34 +16,35 @@ const OutputContainer = ({ scrollRef, textOutput, handleScroll, handleTextOutput
 
     const [activeTab, setActiveTab] = useState<string>(OUTPUT_SUBTITLES);
 
+    const handleActiveTab = (tabId: string) => {
+        setActiveTab(tabId);
+    }
+
     return (
-        <>
-            <div className="flex-row">
-                <div className="output-container-tab">
-                    <button className={`output-container-tablinks ${activeTab === OUTPUT_SUBTITLES ? 'active' : ''}`} onClick={() => setActiveTab(OUTPUT_SUBTITLES)}>Fixed Subtitles</button>
+        <TabbedContainer
+            activeTab={activeTab}
+            id="outputContainer"
+            handleActiveTab={handleActiveTab}
+        >
+            <TabWrapper
+                containerClassNames={`padded-container`}
+                containerId={OUTPUT_SUBTITLES}
+                containerTitle="Fixed Subtitles"
+            >
+                <div className="flex-row">  
+                    <CopyTextArea 
+                        className="full-width no-resize" 
+                        cols={50} 
+                        id="srtOutput"
+                        rows={23}
+                        scrollRef={scrollRef}
+                        onChange={handleTextOutputChange} 
+                        onScroll={handleScroll}
+                        value={textOutput}
+                    />              
                 </div>
-            </div>
-            <div className="flex-row output-tab-content-row">
-                <div className="flex-column full-width">
-                    <div id="outputSubtitles" className={`output-container-tabcontent padded-container ${activeTab === OUTPUT_SUBTITLES ? '' : 'hidden'}`}>
-                        <div className="inner-tabcontent-container">
-                            <div className="flex-row">  
-                                <CopyTextArea 
-                                    className="full-width no-resize" 
-                                    cols={50} 
-                                    id="srtOutput"
-                                    rows={23}
-                                    scrollRef={scrollRef}
-                                    onChange={handleTextOutputChange} 
-                                    onScroll={handleScroll}
-                                    value={textOutput}
-                                />             
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </>
+            </TabWrapper>
+        </TabbedContainer>
     );
 };
 

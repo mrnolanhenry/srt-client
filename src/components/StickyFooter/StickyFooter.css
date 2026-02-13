@@ -8,6 +8,6 @@
     border-style: solid;
     border-color: white;
     border-width: 1px 0 0 0;
-    background-color: rgba(0, 0, 0, .3);
+    background-color: rgba(0, 0, 0, .5);
     backdrop-filter: blur(2px);
 }

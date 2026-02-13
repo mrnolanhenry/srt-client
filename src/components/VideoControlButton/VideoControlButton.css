@@ -1,0 +1,54 @@
+.video-control-fake-button,
+.video-control-button {
+    position: absolute;
+    margin: 16px 22px 0 0;
+    float: right;
+    z-index: 999;
+    transition: .3s;
+    color: white;
+    text-shadow: 2px 2px 15px rgba(0, 0, 0);
+    background-color: transparent;
+    border-width: 0;
+    padding: 0;
+}
+
+.video-control-fake-button.disabled,
+.video-control-button.disabled {
+    color: #5B5B5B;
+}
+
+.video-control-fake-button {
+    cursor: default;
+}
+
+.video-control-hover {
+    /* display: none; */
+    visibility: hidden;
+    color: white;
+    text-shadow: 2px 2px 15px rgba(0, 0, 0);
+    margin-bottom: 14px;
+    text-wrap-mode: nowrap;
+}
+
+.video-control-button-container {
+    max-width: 40px;
+}
+
+.video-control-button-container:has(.video-control-character:hover)
+ {
+    .video-control-hover {
+        visibility: visible;
+    }
+}
+
+.video-control-span {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    cursor: default;
+}
+
+.video-control-character {
+    padding-left: 4px;
+}
