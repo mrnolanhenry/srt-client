@@ -1,24 +1,24 @@
 #videoContainer {
   .tab-content-row {
     height: 400px;
-    /* background-color: rgba(63, 75, 145, 1); */
-    border-color: rgba(63, 75, 145, 1);
+    background-color: rgba(26, 26, 26, 1);
+    border-color: rgba(26, 26, 26, 1);
   }
 
   .tabbed-container-tab button {
-      /* background-color: color-mix(in oklab, rgba(63, 75, 145, 1) 75%, black); */
-      border-color: color-mix(in oklab, rgba(63, 75, 145, 1) 75%, black);
+      background-color: color-mix(in oklab, rgba(26, 26, 26, 1) 75%, black);
+      border-color: color-mix(in oklab, rgba(26, 26, 26, 1) 75%, black);
       border-style: solid;
       border-width: 1px 1px 0 1px;
   }
 
   .tabbed-container-tab button:hover {
-    /* background-color: color-mix(in oklab, rgba(63, 75, 145, 1) 90%, black); */
-    border-color: color-mix(in oklab, rgba(63, 75, 145, 1) 90%, black);
+    background-color: color-mix(in oklab, rgba(26, 26, 26, 1) 90%, black);
+    border-color: color-mix(in oklab, rgba(26, 26, 26, 1) 90%, black);
   }
 
   .tabbed-container-tab button.active {
-    /* background-color: rgba(63, 75, 145, 1); */
-    border-color: rgba(63, 75, 145, 1);
+    background-color: rgba(26, 26, 26, 1);
+    border-color: rgba(26, 26, 26, 1);
   }
 }
