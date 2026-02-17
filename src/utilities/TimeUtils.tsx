@@ -102,6 +102,10 @@ abstract class TimeUtils {
     return totalMilliSecs;
   };
 
+  static getTimeInTotalMilliseconds(time: Time): number {
+    return (time.getUTCHours() * 60 * 60 * 1000) + (time.getUTCMinutes() * 60 * 1000) + (time.getUTCSeconds() * 1000) + time.getUTCMilliseconds();
+  };
+
   static getMillisecsFromFps(timeArr: string[]): number {
     const fps = 24;
     const hrs = parseInt(timeArr[0]);

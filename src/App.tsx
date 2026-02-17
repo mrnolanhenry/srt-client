@@ -238,7 +238,7 @@ function App() {
                   lineStopInput={lineStopInput}
                   shouldOffsetTimecodes={shouldOffsetTimecodes}
                   shouldScrubNonDialogue={shouldScrubNonDialogue}
-                  timeInputString={TimeUtils.getDisplayTime(timeInput)}
+                  timeInput={timeInput}
                   textInput={textInputs[0]}
                   handleFixCallback={handleFixSubtitles}
                 />
