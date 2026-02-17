@@ -69,10 +69,11 @@ function App() {
     setCues(newCues);
   };
 
-  const handleFixSubtitles = (newData: string) => {
-    const newCues = SubtitleUtils.convertLinesToCues(newData.split("\n"), true);
+  const handleFixSubtitles = (newCues: VTTCue[]) => {
     setCues(newCues);
-    setTextOutput(newData);
+    // Convert back to string[] and TODO: conditionally choose to sequence based on form control.
+    const newLines = SubtitleUtils.convertCuesToLines(newCues, true).join("\n");
+    setTextOutput(newLines);
   };
 
   const handleHoursChange = (event: any) => {

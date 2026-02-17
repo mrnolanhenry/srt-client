@@ -11,7 +11,7 @@ interface SubtitleFixerProps {
   shouldScrubNonDialogue: boolean;
   timeInput: Time;
   textInput: string;
-  handleFixCallback: (fixedText: string) => void;
+  handleFixCallback: (fixedCues: VTTCue[]) => void;
 }
 
 const SubtitleFixer = ({ lineStartInput, lineStopInput, shouldOffsetTimecodes, shouldScrubNonDialogue, timeInput, textInput, handleFixCallback }: SubtitleFixerProps) => {
@@ -33,9 +33,7 @@ const SubtitleFixer = ({ lineStartInput, lineStopInput, shouldOffsetTimecodes, s
         inputCues = SubtitleUtils.offsetCues(inputCues, offset, lineStartInput, lineStopInput, false);
       }
 
-      // THEN convert back to string[] and (eventually) conditionally choose to sequence based on form control.
-      const newLines = SubtitleUtils.convertCuesToLines(inputCues, true).join("\n");
-      handleFixCallback(newLines);
+      handleFixCallback(inputCues);
   };
 
   const getOffsetAmount = (cues: VTTCue[]) => {
