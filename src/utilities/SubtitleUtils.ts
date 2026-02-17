@@ -11,22 +11,22 @@ abstract class SubtitleUtils {
         lines.forEach(line => {
             let newLine = StringUtils.removeReturnCharacter(line);
             if (StringUtils.isLineNumber(newLine)) {
-            // line is a line number
-            // we have reached a new cue, so we can push the previous cue if it exists
-            if (currentLineNumber > 0 && currentLineNumber !== undefined && currentStartTime !== null && currentStartTime !== undefined && currentEndTime !== null && currentEndTime !== undefined) {
-                const cue = new VTTCue(currentStartTime as number / 1000, currentEndTime as number / 1000,  currentSubtitleText.join("\n"));
-                cue.id = currentLineNumber.toString();
-                cues.push(cue);
-            }
-            // reset current subtitle text and start and end times for the new cue
-            currentLineNumber = Number(newLine);
-            currentStartTime = null;
-            currentEndTime = null;
-            currentSubtitleText = [];
+                // line is a line number
+                // we have reached a new cue, so we can push the previous cue if it exists
+                if (currentLineNumber > 0 && currentLineNumber !== undefined && currentStartTime !== null && currentStartTime !== undefined && currentEndTime !== null && currentEndTime !== undefined) {
+                    const cue = new VTTCue(currentStartTime as number / 1000, currentEndTime as number / 1000,  currentSubtitleText.join("\n"));
+                    cue.id = currentLineNumber.toString();
+                    cues.push(cue);
+                }
+                // reset current subtitle text and start and end times for the new cue
+                currentLineNumber = Number(newLine);
+                currentStartTime = null;
+                currentEndTime = null;
+                currentSubtitleText = [];
             }
             else if (line.includes(" --> ")) {
                 // line is a timecode line
-                const {startTimeString, endTimeString} = SubtitleUtils.getStartAndEndString(line);
+                const {startTimeString, endTimeString} = SubtitleUtils.getStartAndEndString(newLine);
                 currentStartTime = TimeUtils.convertStringToMillisecs(startTimeString) as number;
                 currentEndTime = TimeUtils.convertStringToMillisecs(endTimeString) as number;
             }
@@ -50,6 +50,32 @@ abstract class SubtitleUtils {
         const endTimeString = lineArr[1]
         return {startTimeString, endTimeString};
     };
+
+    static convertCuesToLines(cues: VTTCue[], shouldSequence: boolean = true): string[] {
+        let lines: string[] = [];
+        let currentLineNumber = 0;
+        cues.forEach((cue, index) => {
+            const cueLines = cue.text.split("\n");
+            if (cueLines.some(cueLine => cueLine !== "")) {
+                currentLineNumber++;
+                const lineNumber = shouldSequence || !StringUtils.isLineNumber(cue.id) ? currentLineNumber : Number(cue.id);
+                lines.push(lineNumber.toString());
+
+                const newStartString = TimeUtils.convertMillisecsToString(cue.startTime * 1000);
+                const newEndString = TimeUtils.convertMillisecsToString(cue.endTime * 1000);
+                
+                const timeCodeString = newStartString + " --> " + newEndString;
+                lines.push(timeCodeString);
+
+                cueLines.forEach(cueLine => {
+                    lines.push(cueLine);
+                });
+                lines.push("");
+            }
+        })
+
+        return lines;
+    }
 }
 
 export default SubtitleUtils;

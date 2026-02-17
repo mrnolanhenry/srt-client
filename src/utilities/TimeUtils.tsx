@@ -25,7 +25,7 @@ abstract class TimeUtils {
     const mins = Math.floor(remainingMillisecs/(60 * 1000));
     remainingMillisecs = remainingMillisecs - (mins * 60 * 1000);
     const secs = Math.floor(remainingMillisecs/(1000));
-    remainingMillisecs = remainingMillisecs - (secs * 1000);
+    remainingMillisecs = Math.round(remainingMillisecs - (secs * 1000));
     return this.formatTimeAsString(hrs, mins, secs, remainingMillisecs);
   };
 
@@ -50,7 +50,8 @@ abstract class TimeUtils {
     const timeArr = timeString.split(":");
     if (!this.isValidTimeInMillisecs(timeArr)) {
       if (!this.isValidTimeInFps(timeArr)) {
-        console.log("time format isn't valid");
+        console.log(`time is in an invalid format`);
+        console.log(timeArr);
         return;
       }
       return this.getTimeFromFpsString(timeArr);
@@ -62,7 +63,8 @@ abstract class TimeUtils {
     const timeArr = timeString.split(":");
     if (!this.isValidTimeInMillisecs(timeArr)) {
       if (!this.isValidTimeInFps(timeArr)) {
-        console.log("time format isn't valid");
+        console.log(`time is in an invalid format`);
+        console.log(timeArr);
         return;
       }
       return this.getMillisecsFromFps(timeArr);

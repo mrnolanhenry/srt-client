@@ -26,8 +26,8 @@ function App() {
   const [lineStartInput, setLineStartInput] = useState<number>(1);
   const [lineStopInput, setLineStopInput] = useState<number | null>(null);
   const [timeInput, setTimeInput] = useState<Time>(new Time(0, 0, 0, 0));
-
-  const shouldScrubNonDialogue = false;
+  const [shouldOffsetTimecodes, setShouldOffsetTimecodes] = useState<boolean>(true);
+  const [shouldScrubNonDialogue, setShouldScrubNonDialogue] = useState<boolean>(false);
 
   const refInputTextArea = useRef<HTMLTextAreaElement>(null);
   const refOutputTextArea = useRef<HTMLTextAreaElement>(null);
@@ -142,6 +142,14 @@ function App() {
     }
   };
 
+  const handleShouldOffsetToggle = () => {
+    setShouldOffsetTimecodes(!shouldOffsetTimecodes);
+  }
+
+  const handleShouldScrubToggle = () => {
+    setShouldScrubNonDialogue(!shouldScrubNonDialogue);
+  }
+
   const handleDownload = () => {
     const filename = 'output.srt';
     downloadTextFile({name: filename, content: textOutput});
@@ -177,6 +185,8 @@ function App() {
                 <ControlsContainer
                   lineStartInput={lineStartInput}
                   lineStopInput={lineStopInput as number}
+                  shouldOffsetTimecodes={shouldOffsetTimecodes}
+                  shouldScrubNonDialogue={shouldScrubNonDialogue}
                   timeInput={timeInput}
                   handleHoursChange={handleHoursChange}
                   handleMinutesChange={handleMinutesChange}
@@ -184,6 +194,8 @@ function App() {
                   handleMillisecondsChange={handleMillisecondsChange}
                   handleLineStartInputChange={handleLineStartInputChange}
                   handleLineStopInputChange={handleLineStopInputChange}
+                  handleShouldOffsetToggle={handleShouldOffsetToggle}
+                  handleShouldScrubToggle={handleShouldScrubToggle}
                 />
               </div>
               <div id="videoContainerColumn" className="flex-column centered-column padded-column">
@@ -224,6 +236,7 @@ function App() {
                 <SubtitleFixer 
                   lineStartInput={lineStartInput}
                   lineStopInput={lineStopInput}
+                  shouldOffsetTimecodes={shouldOffsetTimecodes}
                   shouldScrubNonDialogue={shouldScrubNonDialogue}
                   timeInputString={TimeUtils.getDisplayTime(timeInput)}
                   textInput={textInputs[0]}

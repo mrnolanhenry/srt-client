@@ -6,21 +6,38 @@ import './SubtitleFixer.css';
 interface SubtitleFixerProps {
   lineStartInput: number;
   lineStopInput: number | null;
+  shouldOffsetTimecodes: boolean;
   shouldScrubNonDialogue: boolean;
   timeInputString: string;
   textInput: string;
   handleFixCallback: (fixedText: string) => void;
 }
 
-const SubtitleFixer = ({ lineStartInput, lineStopInput, shouldScrubNonDialogue, timeInputString, textInput, handleFixCallback }: SubtitleFixerProps) => {
+const SubtitleFixer = ({ lineStartInput, lineStopInput, shouldOffsetTimecodes, shouldScrubNonDialogue, timeInputString, textInput, handleFixCallback }: SubtitleFixerProps) => {
   const handleFix = (): void => {
       const lines = textInput.split("\n");
-      const offset = getOffsetAmount(lines);
+      const offset = shouldOffsetTimecodes ? getOffsetAmount(lines) : 0;
       if (isNaN(offset)) {
         return console.error('invalid offset amount from current time');
       }
-      const newData = sequenceLineNumbers(offsetAndScrubSubtitles(lines,offset));
-      handleFixCallback(newData);
+
+      const unsequencedOffsetCues = SubtitleUtils.convertLinesToCues(offsetAndScrubSubtitles(lines, offset));
+      const newLines = SubtitleUtils.convertCuesToLines(unsequencedOffsetCues).join("\n");
+      // console.log("unsequencedOffsetCues");
+      // console.log(unsequencedOffsetCues);
+      console.log("newLines.split");
+      console.log(newLines.split("\n"));
+
+
+      // TODO: Want to now convert them to cues without altering timecodes or scrubbing non-dialogue
+      // THEN perform time code adjustments and/or scrubbing on the VTTCue[] 
+      // THEN convert back to string[] and (eventually) conditionally choose to sequence based on form control.
+      const unsequencedInputCues = SubtitleUtils.convertLinesToCues(lines);
+      const alteredCues: VTTCue[];
+      // const newerLines = SubtitleUtils.convertCuesToLines(alteredCues, shouldSequence).join("\n");
+      // handleFixCallback(newerLines);
+
+      handleFixCallback(newLines);
   };
   
   const offsetAndScrubSubtitles = (lines: string[], offset: number): string[] => {
@@ -68,7 +85,7 @@ const SubtitleFixer = ({ lineStartInput, lineStopInput, shouldScrubNonDialogue, 
   };
 
   const sequenceLineNumbers = (lines: string[]): string => {
-    let array: string[] = [];
+    let sequencedLines: string[] = [];
     let currentLineNumber = 1;
     lines.forEach(line => {
       let newLine = StringUtils.removeReturnCharacter(line);
@@ -77,10 +94,11 @@ const SubtitleFixer = ({ lineStartInput, lineStopInput, shouldScrubNonDialogue, 
         newLine = currentLineNumber.toString();
         currentLineNumber++;
       }
-      array.push(newLine);
+      sequencedLines.push(newLine);
     });
-    return array.join("\n");
+    return sequencedLines.join("\n");
   };
+
   
   //TODO: test this function thoroughly - was described as a WIP previously
   const scrubNonDialogue = (line: string, startChar: string, endChar: string): string => {

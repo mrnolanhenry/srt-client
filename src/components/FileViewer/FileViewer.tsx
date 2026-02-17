@@ -16,8 +16,6 @@ const FileViewer = ({ fileContents, handleUploadCallback }: FileViewerProps) => 
   const uploadFilesLabel = `Upload ${fileContents.length === 0 ? "" : "More"} Files ${UPLOAD_CHAR}`;
 
     useEffect(() => {
-      // console.log('useEffect - fileInputs changed:');
-      // console.log(fileInputs);
       if (fileContents && fileContents.length) {
         setActiveTab(fileContents[0].name);
       }
