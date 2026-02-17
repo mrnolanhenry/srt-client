@@ -1,8 +1,8 @@
-#customCharacterControl {
+#customCharacterSelect {
     fieldset {
         flex-direction: row;
         border-width: 0;
-        
+
         legend {
             display: flex;
             align-items: center;

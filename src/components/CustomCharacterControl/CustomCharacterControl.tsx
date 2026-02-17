@@ -13,34 +13,42 @@ const CustomCharacterControl = ({ customStartChar, customEndChar, shouldScrubCus
 
   return (
     <>
-      <div id="customCharacterControl" className="flex-row align-center-row">
-          <div className="flex-column">
-            <div className="flex-row">
-              <fieldset disabled={!shouldScrubCustomChar}>
-                <div className="flex-column centered-column padded-column">
-                  <div className="flex-row">
-                    <small>Start</small>
+      <div className="flex-column padded-column">
+        <div className="flex-row">
+            <input type="checkbox" id="shouldScrubCustomChar" checked={shouldScrubCustomChar} onChange={handleScrubCustomCharToggle} />
+            <label htmlFor="shouldScrubCustomChar">Custom:</label>
+        </div>
+      </div>
+      <div className="flex-column padded-column">
+        <div id="customCharacterSelect" className="flex-row align-center-row">
+            <div className="flex-column">
+              <div className="flex-row">
+                <fieldset disabled={!shouldScrubCustomChar}>
+                  <div className="flex-column centered-column padded-column">
+                    <div className="flex-row">
+                      <small>Start</small>
+                    </div>
+                    <div className="flex-row">
+                      <input id="customStartCharInput" name="customStartCharInput" disabled={!shouldScrubCustomChar} size={1} onChange={handleCustomStartCharChange} value={customStartChar} />
+                    </div>
                   </div>
-                  <div className="flex-row">
-                    <input id="customStartCharInput" name="customStartCharInput" disabled={!shouldScrubCustomChar} size={1} onChange={handleCustomStartCharChange} value={customStartChar} />
+                  <div className="flex-column centered-column padded-column">
+                    <div className="flex-row">
+                      <small>End</small>
+                    </div>
+                    <div className="flex-row">
+                      <input id="customEndCharInput" name="customEndCharInput" disabled={!shouldScrubCustomChar} size={1} onChange={handleCustomEndCharChange} value={customEndChar} />
+                    </div>
                   </div>
-                </div>
-                <div className="flex-column centered-column padded-column">
-                  <div className="flex-row">
-                    <small>End</small>
+                  <div className="flex-column flex-end-column padded-column">
+                    <div className="flex-row">
+                      <small>{`(Start and End characters must be unique)`}</small>
+                    </div>
                   </div>
-                  <div className="flex-row">
-                    <input id="customEndCharInput" name="customEndCharInput" disabled={!shouldScrubCustomChar} size={1} onChange={handleCustomEndCharChange} value={customEndChar} />
-                  </div>
-                </div>
-                <div className="flex-column flex-end-column padded-column">
-                  <div className="flex-row">
-                    <small>{`(Start and End characters must be unique)`}</small>
-                  </div>
-                </div>
-              </fieldset>
+                </fieldset>
+              </div>
             </div>
-          </div>
+        </div>
       </div>
     </>
   );

@@ -152,22 +152,14 @@ const ControlsContainer = ({
                                     <label htmlFor="shouldScrubBrackets">[]</label>
                                 </div>
                             </div>
-                            <div className="flex-column padded-column">
-                                <div className="flex-row">
-                                    <input type="checkbox" id="shouldScrubCustomChar" checked={shouldScrubCustomChar} onChange={handleScrubCustomCharToggle} />
-                                    <label htmlFor="shouldScrubCustomChar">Custom:</label>
-                                </div>
-                            </div>
-                            <div className="flex-column padded-column">
-                                <CustomCharacterControl 
-                                    customStartChar={customStartChar}
-                                    customEndChar={customEndChar}
-                                    shouldScrubCustomChar={shouldScrubCustomChar}
-                                    handleCustomStartCharChange={handleCustomStartCharChange}
-                                    handleCustomEndCharChange={handleCustomEndCharChange}
-                                    handleScrubCustomCharToggle={handleScrubCustomCharToggle}
-                                />
-                            </div>
+                            <CustomCharacterControl 
+                                customStartChar={customStartChar}
+                                customEndChar={customEndChar}
+                                shouldScrubCustomChar={shouldScrubCustomChar}
+                                handleCustomStartCharChange={handleCustomStartCharChange}
+                                handleCustomEndCharChange={handleCustomEndCharChange}
+                                handleScrubCustomCharToggle={handleScrubCustomCharToggle}
+                            />
                         </div>
                     </fieldset>
                 </form>
