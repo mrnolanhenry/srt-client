@@ -27,6 +27,19 @@
     flex-direction: column;
     text-align: left;
     margin-bottom: .5rem;
+
+    legend {
+      color: initial;
+    }
+  }
+
+  fieldset.empty {
+    padding-block: 0.35em 0em;
+    border-width: 2px 0px 0px 0px;
+  }
+
+  fieldset:disabled {
+    color: rgba(170, 170, 170, 1);
   }
 
   input[type=checkbox] {

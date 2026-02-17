@@ -81,7 +81,7 @@ const ControlsContainer = ({
                             </div>
                         </div> 
                     </fieldset>
-                    <fieldset disabled={!shouldScrubNonDialogue}>
+                    <fieldset className="empty" disabled={!shouldScrubNonDialogue}>
                         <legend>
                             <input type="checkbox" id="shouldOffsetCheckbox" name="shouldOffsetCheckbox" checked={shouldScrubNonDialogue} onChange={handleShouldScrubToggle} />
                             <label htmlFor="shouldOffsetCheckbox">Remove non-dialogue? <small>e.g. "{`(chuckles)`}" or "{`[coughs]`}"</small></label>
