@@ -65,12 +65,12 @@ function App() {
     // need to also update cues in case user manually edits output textarea (e.g. to add new lines or remove lines)
     // TODO: could perform some validation here to make sure the text is in the correct format before updating cues, but for now will just assume user is inputting valid subtitle text
     // TODO: could be more efficient and only update cues that were changed vs. regenerating all cues, but this is simpler to implement for now and performance should be fine for typical subtitle file sizes
-    const newCues = SubtitleUtils.convertLinesToCues(event.target.value.split("\n"));
+    const newCues = SubtitleUtils.convertLinesToCues(event.target.value.split("\n"), true);
     setCues(newCues);
   };
 
   const handleFixSubtitles = (newData: string) => {
-    const newCues = SubtitleUtils.convertLinesToCues(newData.split("\n"));
+    const newCues = SubtitleUtils.convertLinesToCues(newData.split("\n"), true);
     setCues(newCues);
     setTextOutput(newData);
   };

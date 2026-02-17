@@ -2,7 +2,7 @@ import StringUtils from "./StringUtils";
 import TimeUtils from "./TimeUtils";
 
 abstract class SubtitleUtils { 
-    static convertLinesToCues(lines: string[]): VTTCue[] {
+    static convertLinesToCues(lines: string[], shouldSequence = true): VTTCue[] {
         let cues: VTTCue[] = [];
         let currentLineNumber: number = 0;
         let currentStartTime: number | null = null;
@@ -19,7 +19,7 @@ abstract class SubtitleUtils {
                     cues.push(cue);
                 }
                 // reset current subtitle text and start and end times for the new cue
-                currentLineNumber = Number(newLine);
+                currentLineNumber = shouldSequence ? currentLineNumber + 1 : Number(newLine);
                 currentStartTime = null;
                 currentEndTime = null;
                 currentSubtitleText = [];
@@ -54,7 +54,7 @@ abstract class SubtitleUtils {
     static convertCuesToLines(cues: VTTCue[], shouldSequence: boolean = true): string[] {
         let lines: string[] = [];
         let currentLineNumber = 0;
-        cues.forEach((cue, index) => {
+        cues.forEach((cue) => {
             const cueLines = cue.text.split("\n");
             if (cueLines.some(cueLine => cueLine !== "")) {
                 currentLineNumber++;
@@ -72,10 +72,64 @@ abstract class SubtitleUtils {
                 });
                 lines.push("");
             }
-        })
+        });
 
         return lines;
     }
+
+    static sequenceCues = (cues: VTTCue[],): VTTCue[] => {
+        return cues.map((cue, index) => {
+            const newCue = new VTTCue(cue.startTime, cue.endTime,  cue.text);
+            newCue.id = (index + 1).toString();
+            return newCue;
+        })
+    };
+
+    static scrubCues = (cues: VTTCue[], shouldSequence: boolean = true): VTTCue[] => {
+        let newCues: VTTCue[] = [];
+        cues.forEach((cue, index) => {
+            const cueLines = cue.text.split("\n");
+            const scrubbedLines = cueLines.map(line => this.scrubNonDialogue(line));
+            if (scrubbedLines.some(scrubbedLine => scrubbedLine !== "")) {
+                const newCue = new VTTCue(cue.startTime, cue.endTime,  cue.text);
+                newCue.id = shouldSequence ? (index + 1).toString() : cue.id;
+                newCues.push(newCue);
+            }
+        });
+        return newCues;
+    };
+
+    static scrubNonDialogue(line: string): string {
+        let newLine = line;
+        newLine = StringUtils.removeStartAndEndChars(newLine, "(",")");
+        newLine = StringUtils.removeStartAndEndChars(newLine, "[","]");
+
+        // TODO: Consider doing string.trim or trimEnd in removeStartAndEndChars method 
+        // to avoid doing this last call.
+        newLine = StringUtils.removeStartAndEndChars(newLine, "[","] ");
+        return newLine;
+    }
+
+    static offsetCues(cues: VTTCue[], offset: number, lineNumberToStartOffset: number, lineNumberToStopOffset: number | null = null, shouldSequence: boolean = true): VTTCue[] {
+        let newCues: VTTCue[] = [];
+        cues.forEach((cue, index) => {
+            const cueLines = cue.text.split("\n");
+            if (cueLines.some(cueLine => cueLine !== "")) {
+                const lineNumber = Number(cue.id);
+                let newCueStartTime = cue.startTime;
+                let newCueEndTime = cue.endTime;
+                const isPastStopOffsetNumber = (lineNumberToStopOffset !== null && lineNumber > lineNumberToStopOffset);
+                if (lineNumber >= lineNumberToStartOffset && !isPastStopOffsetNumber) {
+                    newCueStartTime = ((newCueStartTime * 1000) + offset) / 1000;
+                    newCueEndTime = ((newCueEndTime * 1000) + offset) / 1000;
+                }
+                const newCue = new VTTCue(newCueStartTime, newCueEndTime, cue.text);
+                newCue.id = shouldSequence ? (index + 1).toString() : cue.id;
+                newCues.push(newCue);
+            }
+        });
+        return newCues;
+    };
 }
 
 export default SubtitleUtils;
