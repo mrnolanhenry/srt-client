@@ -9,12 +9,19 @@ abstract class StringUtils {
   };
 
   static removeStartAndEndChars (line: string, startChar: string, endChar: string): string {
-    let newLine = line;
+    // TODO: Test whether this trimEnd isn't causing some unexpected side effects
+    let newLine = line.trimEnd();
     const indexOfStartChar = line.indexOf(startChar);
     const indexOfEndChar = line.indexOf(endChar);
     if (indexOfStartChar == 0) {
+      console.log("line.trimEnd");
+      console.log(line.trimEnd());
       if (indexOfEndChar !=-1) {
+        console.log("indexOfEndChar");
+        console.log(indexOfEndChar);
           newLine = newLine.substring(indexOfEndChar + 2, newLine.length);
+          console.log("newLine");
+          console.log(newLine);
       }
       else {
           newLine = "";

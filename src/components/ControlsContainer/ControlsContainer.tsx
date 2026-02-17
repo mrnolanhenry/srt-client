@@ -1,10 +1,13 @@
 import './ControlsContainer.css';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import type { ScrubCharacterSet } from '../../interfaces/ScrubCharacterSet';
+import TimeUtils from '../../utilities/TimeUtils';
 import LineNumberControl from '../LineNumberControl/LineNumberControl';
 import TimeControl from '../TimeControl/TimeControl';
-import TimeUtils from '../../utilities/TimeUtils';
 import TabbedContainer from '../TabbedContainer/TabbedContainer';
 import TabWrapper from '../TabWrapper/TabWrapper';
+import CustomCharacterControl from '../CustomCharacterControl/CustomCharacterControl';
+import { BRACKET_CLOSE, BRACKET_OPEN, PARENTHESES_CLOSE, PARENTHESES_OPEN, TAG_CLOSE, TAG_OPEN } from '../../constants/constants';
 
 interface ControlsContainerProps {
     lineStartInput: number;
@@ -18,6 +21,7 @@ interface ControlsContainerProps {
     handleMillisecondsChange: (event: any) => void;
     handleLineStartInputChange: (event: any) => void;
     handleLineStopInputChange: (event: any) => void;
+    handleScrubChars: (scrubCharacterSets: ScrubCharacterSet[]) => void;
     handleShouldOffsetToggle: () => void;
     handleShouldScrubToggle: () => void;
 }
@@ -25,13 +29,59 @@ interface ControlsContainerProps {
 const ControlsContainer = ({ 
     lineStartInput, lineStopInput, shouldOffsetTimecodes, shouldScrubNonDialogue, timeInput, 
     handleHoursChange, handleMinutesChange, handleSecondsChange, handleMillisecondsChange, 
-    handleLineStartInputChange, handleLineStopInputChange, handleShouldOffsetToggle, handleShouldScrubToggle }: ControlsContainerProps) => {
+    handleLineStartInputChange, handleLineStopInputChange, handleScrubChars,
+    handleShouldOffsetToggle, handleShouldScrubToggle }: ControlsContainerProps) => {
     const SUBTITLE_CONTROLS = "subtitleControls";
 
     const [activeTab, setActiveTab] = useState<string>(SUBTITLE_CONTROLS);
+    const [shouldScrubParentheses, setShouldScrubParentheses] = useState<boolean>(true);
+    const [shouldScrubBrackets, setShouldScrubBrackets] = useState<boolean>(true);
+    const [shouldScrubCustomChar, setShouldScrubCustomChar] = useState<boolean>(false);
+    const [customStartChar, setCustomStartChar] = useState<string>(TAG_OPEN);
+    const [customEndChar, setCustomEndChar] = useState<string>(TAG_CLOSE);
+
+    const getScrubChars = () => {
+        let scrubCharacterSets: ScrubCharacterSet[] = [];
+        if (shouldScrubNonDialogue) {
+            if (shouldScrubBrackets) {
+                scrubCharacterSets.push({startChar: BRACKET_OPEN, endChar: BRACKET_CLOSE});
+            }
+            if (shouldScrubParentheses) {
+                scrubCharacterSets.push({startChar: PARENTHESES_OPEN, endChar: PARENTHESES_CLOSE});
+            }
+            if (shouldScrubCustomChar) {
+                scrubCharacterSets.push({startChar: customStartChar, endChar: customEndChar});
+            }
+        }
+        return scrubCharacterSets;
+    }
+
+    useEffect(() => {
+        handleScrubChars(getScrubChars());
+    },[customStartChar, customEndChar, shouldScrubBrackets, shouldScrubParentheses, shouldScrubCustomChar, shouldScrubNonDialogue]);
 
     const handleActiveTab = (tabId: string) => {
         setActiveTab(tabId);
+    }
+
+    const handleScrubParentheses = () => {
+        setShouldScrubParentheses(!shouldScrubParentheses);
+    }
+
+    const handleScrubBrackets = () => {
+        setShouldScrubBrackets(!shouldScrubBrackets);
+    }
+
+    const handleScrubCustomCharToggle = () => {
+        setShouldScrubCustomChar(!shouldScrubCustomChar);
+    }
+
+    const handleCustomStartCharChange = (event: any) => {
+        setCustomStartChar(event.target.value);
+    }
+
+    const handleCustomEndCharChange = (event: any) => {
+        setCustomEndChar(event.target.value);
     }
 
     return (
@@ -81,11 +131,44 @@ const ControlsContainer = ({
                             </div>
                         </div> 
                     </fieldset>
-                    <fieldset className="empty" disabled={!shouldScrubNonDialogue}>
+                    <fieldset disabled={!shouldScrubNonDialogue}>
                         <legend>
                             <input type="checkbox" id="shouldOffsetCheckbox" name="shouldOffsetCheckbox" checked={shouldScrubNonDialogue} onChange={handleShouldScrubToggle} />
-                            <label htmlFor="shouldOffsetCheckbox">Remove non-dialogue? <small>e.g. "{`(chuckles)`}" or "{`[coughs]`}"</small></label>
+                            <label htmlFor="shouldOffsetCheckbox">Remove non-dialogue?</label>
                         </legend>
+                        <div id="scrubLabelRow" className="flex-row">
+                            <small>{`Which characters to use? e.g. "(chuckles)" or "[coughs]"`} </small>
+                        </div>
+                        <div id="scrubNonDialogueRow" className="section-row flex-row align-center-row full-width">
+                            <div className="flex-column padded-column">
+                                <div className="flex-row">
+                                    <input type="checkbox" id="shouldScrubParentheses" checked={shouldScrubParentheses} onChange={handleScrubParentheses} />
+                                    <label htmlFor="shouldScrubParentheses">()</label>
+                                </div>
+                            </div>
+                            <div className="flex-column padded-column">
+                                <div className="flex-row">
+                                    <input type="checkbox" id="shouldScrubBrackets" checked={shouldScrubBrackets} onChange={handleScrubBrackets} />
+                                    <label htmlFor="shouldScrubBrackets">[]</label>
+                                </div>
+                            </div>
+                            <div className="flex-column padded-column">
+                                <div className="flex-row">
+                                    <input type="checkbox" id="shouldScrubCustomChar" checked={shouldScrubCustomChar} onChange={handleScrubCustomCharToggle} />
+                                    <label htmlFor="shouldScrubCustomChar">Custom:</label>
+                                </div>
+                            </div>
+                            <div className="flex-column padded-column">
+                                <CustomCharacterControl 
+                                    customStartChar={customStartChar}
+                                    customEndChar={customEndChar}
+                                    shouldScrubCustomChar={shouldScrubCustomChar}
+                                    handleCustomStartCharChange={handleCustomStartCharChange}
+                                    handleCustomEndCharChange={handleCustomEndCharChange}
+                                    handleScrubCustomCharToggle={handleScrubCustomCharToggle}
+                                />
+                            </div>
+                        </div>
                     </fieldset>
                 </form>
             </TabWrapper>

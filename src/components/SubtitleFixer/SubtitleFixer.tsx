@@ -1,4 +1,5 @@
 import type Time from "../../classes/Time";
+import type { ScrubCharacterSet } from "../../interfaces/ScrubCharacterSet";
 import StringUtils from "../../utilities/StringUtils";
 import SubtitleUtils from "../../utilities/SubtitleUtils";
 import TimeUtils from "../../utilities/TimeUtils";
@@ -7,6 +8,7 @@ import './SubtitleFixer.css';
 interface SubtitleFixerProps {
   lineStartInput: number;
   lineStopInput: number | null;
+  scrubCharacters: ScrubCharacterSet[];
   shouldOffsetTimecodes: boolean;
   shouldScrubNonDialogue: boolean;
   timeInput: Time;
@@ -14,7 +16,7 @@ interface SubtitleFixerProps {
   handleFixCallback: (fixedCues: VTTCue[]) => void;
 }
 
-const SubtitleFixer = ({ lineStartInput, lineStopInput, shouldOffsetTimecodes, shouldScrubNonDialogue, timeInput, textInput, handleFixCallback }: SubtitleFixerProps) => {
+const SubtitleFixer = ({ lineStartInput, lineStopInput, scrubCharacters, shouldOffsetTimecodes, shouldScrubNonDialogue, timeInput, textInput, handleFixCallback }: SubtitleFixerProps) => {
   const handleFix = (): void => {
       const lines = textInput.split("\n");
 
@@ -23,7 +25,7 @@ const SubtitleFixer = ({ lineStartInput, lineStopInput, shouldOffsetTimecodes, s
 
       // THEN perform time code adjustments and/or scrubbing on the VTTCue[] 
       if (shouldScrubNonDialogue) {
-        inputCues = SubtitleUtils.scrubCues(inputCues, false);
+        inputCues = SubtitleUtils.scrubCues(inputCues, scrubCharacters, false);
       }
       if (shouldOffsetTimecodes) {
         const offset = getOffsetAmount(inputCues);

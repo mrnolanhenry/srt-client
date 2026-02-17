@@ -11,6 +11,7 @@ import type { FileContent } from './interfaces/FileContent';
 import TimeUtils from './utilities/TimeUtils';
 import SubtitleUtils from './utilities/SubtitleUtils';
 import VideoContainer from './components/VideoContainer/VideoContainer';
+import { type ScrubCharacterSet } from './interfaces/ScrubCharacterSet';
 
 function App() {
   const INSTRUCTIONS_TEXT = `Update timecodes on existing .srt files with ease!
@@ -28,9 +29,16 @@ function App() {
   const [timeInput, setTimeInput] = useState<Time>(new Time(0, 0, 0, 0));
   const [shouldOffsetTimecodes, setShouldOffsetTimecodes] = useState<boolean>(true);
   const [shouldScrubNonDialogue, setShouldScrubNonDialogue] = useState<boolean>(false);
+  const [scrubCharacters, setScrubCharacters] = useState<ScrubCharacterSet[]>([]);
 
   const refInputTextArea = useRef<HTMLTextAreaElement>(null);
   const refOutputTextArea = useRef<HTMLTextAreaElement>(null);
+
+  const handleScrubChars = (scrubCharacterSets: ScrubCharacterSet[]) => {
+    console.log("scrubCharacterSets");
+    console.log(scrubCharacterSets);
+    setScrubCharacters(scrubCharacterSets);
+  };
 
   const handleScroll = (event: any) => {
     const { scrollTop, scrollLeft } = event.target;
@@ -195,6 +203,7 @@ function App() {
                   handleMillisecondsChange={handleMillisecondsChange}
                   handleLineStartInputChange={handleLineStartInputChange}
                   handleLineStopInputChange={handleLineStopInputChange}
+                  handleScrubChars={handleScrubChars}
                   handleShouldOffsetToggle={handleShouldOffsetToggle}
                   handleShouldScrubToggle={handleShouldScrubToggle}
                 />
@@ -237,6 +246,7 @@ function App() {
                 <SubtitleFixer 
                   lineStartInput={lineStartInput}
                   lineStopInput={lineStopInput}
+                  scrubCharacters={scrubCharacters}
                   shouldOffsetTimecodes={shouldOffsetTimecodes}
                   shouldScrubNonDialogue={shouldScrubNonDialogue}
                   timeInput={timeInput}

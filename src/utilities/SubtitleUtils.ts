@@ -1,3 +1,4 @@
+import type { ScrubCharacterSet } from "../interfaces/ScrubCharacterSet";
 import StringUtils from "./StringUtils";
 import TimeUtils from "./TimeUtils";
 
@@ -85,13 +86,14 @@ abstract class SubtitleUtils {
         })
     };
 
-    static scrubCues = (cues: VTTCue[], shouldSequence: boolean = true): VTTCue[] => {
+    static scrubCues = (cues: VTTCue[], scrubCharacterSets: ScrubCharacterSet[], shouldSequence: boolean = true): VTTCue[] => {
         let newCues: VTTCue[] = [];
         cues.forEach((cue, index) => {
             const cueLines = cue.text.split("\n");
-            const scrubbedLines = cueLines.map(line => this.scrubNonDialogue(line));
-            if (scrubbedLines.some(scrubbedLine => scrubbedLine !== "")) {
-                const newCue = new VTTCue(cue.startTime, cue.endTime,  cue.text);
+            const scrubbedLines = cueLines.map(line => this.scrubNonDialogue(line, scrubCharacterSets));
+            const nonEmptyScrubbedLines = scrubbedLines.filter((scrubbedLine => scrubbedLine !== ""));
+            if (nonEmptyScrubbedLines.length) {
+                const newCue = new VTTCue(cue.startTime, cue.endTime,  nonEmptyScrubbedLines.join("\n"));
                 newCue.id = shouldSequence ? (index + 1).toString() : cue.id;
                 newCues.push(newCue);
             }
@@ -99,14 +101,14 @@ abstract class SubtitleUtils {
         return newCues;
     };
 
-    static scrubNonDialogue(line: string): string {
+    static scrubNonDialogue(line: string, scrubCharacterSets: ScrubCharacterSet[]): string {
         let newLine = line;
-        newLine = StringUtils.removeStartAndEndChars(newLine, "(",")");
-        newLine = StringUtils.removeStartAndEndChars(newLine, "[","]");
-
-        // TODO: Consider doing string.trim or trimEnd in removeStartAndEndChars method 
-        // to avoid doing this last call.
-        newLine = StringUtils.removeStartAndEndChars(newLine, "[","] ");
+        for (let i =0; i < scrubCharacterSets.length; i++) {
+            const characterSet = scrubCharacterSets[i];
+            newLine = StringUtils.removeStartAndEndChars(newLine, characterSet.startChar, characterSet.endChar);
+            console.log("------newLine---------");
+            console.log(newLine);
+        }
         return newLine;
     }
 
