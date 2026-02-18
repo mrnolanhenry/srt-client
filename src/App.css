@@ -56,6 +56,10 @@
   align-items: center;
 }
 
+.align-center-row {
+  align-items: center;
+}
+
 .align-start-column {
   align-items: flex-start;
   text-align: start;

@@ -25,7 +25,7 @@ abstract class TimeUtils {
     const mins = Math.floor(remainingMillisecs/(60 * 1000));
     remainingMillisecs = remainingMillisecs - (mins * 60 * 1000);
     const secs = Math.floor(remainingMillisecs/(1000));
-    remainingMillisecs = remainingMillisecs - (secs * 1000);
+    remainingMillisecs = Math.round(remainingMillisecs - (secs * 1000));
     return this.formatTimeAsString(hrs, mins, secs, remainingMillisecs);
   };
 
@@ -50,7 +50,8 @@ abstract class TimeUtils {
     const timeArr = timeString.split(":");
     if (!this.isValidTimeInMillisecs(timeArr)) {
       if (!this.isValidTimeInFps(timeArr)) {
-        console.log("time format isn't valid");
+        console.log(`time is in an invalid format`);
+        console.log(timeArr);
         return;
       }
       return this.getTimeFromFpsString(timeArr);
@@ -62,7 +63,8 @@ abstract class TimeUtils {
     const timeArr = timeString.split(":");
     if (!this.isValidTimeInMillisecs(timeArr)) {
       if (!this.isValidTimeInFps(timeArr)) {
-        console.log("time format isn't valid");
+        console.log(`time is in an invalid format`);
+        console.log(timeArr);
         return;
       }
       return this.getMillisecsFromFps(timeArr);
@@ -98,6 +100,10 @@ abstract class TimeUtils {
     const millisecs = parseInt(secondArr[1]);
     const totalMilliSecs = hrs * 60 * 60 * 1000 + mins * 60 * 1000 + secs * 1000 + millisecs;
     return totalMilliSecs;
+  };
+
+  static getTimeInTotalMilliseconds(time: Time): number {
+    return (time.getUTCHours() * 60 * 60 * 1000) + (time.getUTCMinutes() * 60 * 1000) + (time.getUTCSeconds() * 1000) + time.getUTCMilliseconds();
   };
 
   static getMillisecsFromFps(timeArr: string[]): number {

@@ -11,6 +11,7 @@ import type { FileContent } from './interfaces/FileContent';
 import TimeUtils from './utilities/TimeUtils';
 import SubtitleUtils from './utilities/SubtitleUtils';
 import VideoContainer from './components/VideoContainer/VideoContainer';
+import { type ScrubCharacterSet } from './interfaces/ScrubCharacterSet';
 
 function App() {
   const INSTRUCTIONS_TEXT = `Update timecodes on existing .srt files with ease!
@@ -26,11 +27,18 @@ function App() {
   const [lineStartInput, setLineStartInput] = useState<number>(1);
   const [lineStopInput, setLineStopInput] = useState<number | null>(null);
   const [timeInput, setTimeInput] = useState<Time>(new Time(0, 0, 0, 0));
-
-  const shouldScrubNonDialogue = false;
+  const [shouldOffsetTimecodes, setShouldOffsetTimecodes] = useState<boolean>(true);
+  const [shouldScrubNonDialogue, setShouldScrubNonDialogue] = useState<boolean>(false);
+  const [scrubCharacters, setScrubCharacters] = useState<ScrubCharacterSet[]>([]);
 
   const refInputTextArea = useRef<HTMLTextAreaElement>(null);
   const refOutputTextArea = useRef<HTMLTextAreaElement>(null);
+
+  const handleScrubChars = (scrubCharacterSets: ScrubCharacterSet[]) => {
+    console.log("scrubCharacterSets");
+    console.log(scrubCharacterSets);
+    setScrubCharacters(scrubCharacterSets);
+  };
 
   const handleScroll = (event: any) => {
     const { scrollTop, scrollLeft } = event.target;
@@ -65,14 +73,15 @@ function App() {
     // need to also update cues in case user manually edits output textarea (e.g. to add new lines or remove lines)
     // TODO: could perform some validation here to make sure the text is in the correct format before updating cues, but for now will just assume user is inputting valid subtitle text
     // TODO: could be more efficient and only update cues that were changed vs. regenerating all cues, but this is simpler to implement for now and performance should be fine for typical subtitle file sizes
-    const newCues = SubtitleUtils.convertLinesToCues(event.target.value.split("\n"));
+    const newCues = SubtitleUtils.convertLinesToCues(event.target.value.split("\n"), true);
     setCues(newCues);
   };
 
-  const handleFixSubtitles = (newData: string) => {
-    const newCues = SubtitleUtils.convertLinesToCues(newData.split("\n"));
+  const handleFixSubtitles = (newCues: VTTCue[]) => {
     setCues(newCues);
-    setTextOutput(newData);
+    // Convert back to string[] and TODO: conditionally choose to sequence based on form control.
+    const newLines = SubtitleUtils.convertCuesToLines(newCues, true).join("\n");
+    setTextOutput(newLines);
   };
 
   const handleHoursChange = (event: any) => {
@@ -142,6 +151,14 @@ function App() {
     }
   };
 
+  const handleShouldOffsetToggle = () => {
+    setShouldOffsetTimecodes(!shouldOffsetTimecodes);
+  }
+
+  const handleShouldScrubToggle = () => {
+    setShouldScrubNonDialogue(!shouldScrubNonDialogue);
+  }
+
   const handleDownload = () => {
     const filename = 'output.srt';
     downloadTextFile({name: filename, content: textOutput});
@@ -177,6 +194,8 @@ function App() {
                 <ControlsContainer
                   lineStartInput={lineStartInput}
                   lineStopInput={lineStopInput as number}
+                  shouldOffsetTimecodes={shouldOffsetTimecodes}
+                  shouldScrubNonDialogue={shouldScrubNonDialogue}
                   timeInput={timeInput}
                   handleHoursChange={handleHoursChange}
                   handleMinutesChange={handleMinutesChange}
@@ -184,6 +203,9 @@ function App() {
                   handleMillisecondsChange={handleMillisecondsChange}
                   handleLineStartInputChange={handleLineStartInputChange}
                   handleLineStopInputChange={handleLineStopInputChange}
+                  handleScrubChars={handleScrubChars}
+                  handleShouldOffsetToggle={handleShouldOffsetToggle}
+                  handleShouldScrubToggle={handleShouldScrubToggle}
                 />
               </div>
               <div id="videoContainerColumn" className="flex-column centered-column padded-column">
@@ -224,8 +246,10 @@ function App() {
                 <SubtitleFixer 
                   lineStartInput={lineStartInput}
                   lineStopInput={lineStopInput}
+                  scrubCharacters={scrubCharacters}
+                  shouldOffsetTimecodes={shouldOffsetTimecodes}
                   shouldScrubNonDialogue={shouldScrubNonDialogue}
-                  timeInputString={TimeUtils.getDisplayTime(timeInput)}
+                  timeInput={timeInput}
                   textInput={textInputs[0]}
                   handleFixCallback={handleFixSubtitles}
                 />
