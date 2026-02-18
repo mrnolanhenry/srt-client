@@ -27,6 +27,8 @@
     flex-direction: column;
     text-align: left;
     margin-bottom: .5rem;
+    padding-block: 0.2em 0.5em;
+    padding-inline: 0.5em;
 
     legend {
       color: initial;
