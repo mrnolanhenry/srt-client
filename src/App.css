@@ -10,7 +10,7 @@
   /* height: calc(100vh - 60px); */
   flex-direction: column;
   flex: 1;
-  margin-bottom: 60px; /* height of the footer */
+  /* margin-bottom: 60px; /* height of the footer - removed footer for now */ 
 }
 
 .flex-column {

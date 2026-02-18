@@ -13,10 +13,10 @@ interface SubtitleFixerProps {
   shouldScrubNonDialogue: boolean;
   timeInput: Time;
   textInput: string;
-  handleFixCallback: (fixedCues: VTTCue[]) => void;
+  handleFixSubtitles: (fixedCues: VTTCue[]) => void;
 }
 
-const SubtitleFixer = ({ lineStartInput, lineStopInput, scrubCharacters, shouldOffsetTimecodes, shouldScrubNonDialogue, timeInput, textInput, handleFixCallback }: SubtitleFixerProps) => {
+const SubtitleFixer = ({ lineStartInput, lineStopInput, scrubCharacters, shouldOffsetTimecodes, shouldScrubNonDialogue, timeInput, textInput, handleFixSubtitles }: SubtitleFixerProps) => {
   const handleFix = (): void => {
       const lines = textInput.split("\n");
 
@@ -35,7 +35,7 @@ const SubtitleFixer = ({ lineStartInput, lineStopInput, scrubCharacters, shouldO
         inputCues = SubtitleUtils.offsetCues(inputCues, offset, lineStartInput, lineStopInput, false);
       }
 
-      handleFixCallback(inputCues);
+      handleFixSubtitles(inputCues);
   };
 
   const getOffsetAmount = (cues: VTTCue[]) => {
@@ -58,7 +58,7 @@ const SubtitleFixer = ({ lineStartInput, lineStopInput, scrubCharacters, shouldO
   
   return (
     <>
-      <button id="btnFix" onClick={handleFix}>Fix Subtitles</button>
+      <button id="btnFix" type="button" onClick={handleFix}>Fix Subtitles</button>
     </>
   );
 };

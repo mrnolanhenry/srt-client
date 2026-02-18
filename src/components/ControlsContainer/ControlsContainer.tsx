@@ -8,37 +8,30 @@ import TabbedContainer from '../TabbedContainer/TabbedContainer';
 import TabWrapper from '../TabWrapper/TabWrapper';
 import CustomCharacterControl from '../CustomCharacterControl/CustomCharacterControl';
 import { BRACKET_CLOSE, BRACKET_OPEN, PARENTHESES_CLOSE, PARENTHESES_OPEN, TAG_CLOSE, TAG_OPEN } from '../../constants/constants';
+import SubtitleFixer from '../SubtitleFixer/SubtitleFixer';
+import type Time from '../../classes/Time';
 
 interface ControlsContainerProps {
-    lineStartInput: number;
-    lineStopInput: number;
-    shouldOffsetTimecodes: boolean;
-    shouldScrubNonDialogue: boolean;
+    textInput: string;
     timeInput: Date;
-    handleHoursChange: (event: any) => void;
-    handleMinutesChange: (event: any) => void;
-    handleSecondsChange: (event: any) => void;
-    handleMillisecondsChange: (event: any) => void;
-    handleLineStartInputChange: (event: any) => void;
-    handleLineStopInputChange: (event: any) => void;
-    handleScrubChars: (scrubCharacterSets: ScrubCharacterSet[]) => void;
-    handleShouldOffsetToggle: () => void;
-    handleShouldScrubToggle: () => void;
+    handleFixSubtitles: (cues: VTTCue[]) => void;
+    handleTimeInputChange: (newTime: Time) => void;
 }
 
-const ControlsContainer = ({ 
-    lineStartInput, lineStopInput, shouldOffsetTimecodes, shouldScrubNonDialogue, timeInput, 
-    handleHoursChange, handleMinutesChange, handleSecondsChange, handleMillisecondsChange, 
-    handleLineStartInputChange, handleLineStopInputChange, handleScrubChars,
-    handleShouldOffsetToggle, handleShouldScrubToggle }: ControlsContainerProps) => {
+const ControlsContainer = ({ textInput, timeInput, handleFixSubtitles, handleTimeInputChange }: ControlsContainerProps) => {
     const SUBTITLE_CONTROLS = "subtitleControls";
 
     const [activeTab, setActiveTab] = useState<string>(SUBTITLE_CONTROLS);
+    const [lineStartInput, setLineStartInput] = useState<number>(1);
+    const [lineStopInput, setLineStopInput] = useState<number | null>(null);
+    const [shouldOffsetTimecodes, setShouldOffsetTimecodes] = useState<boolean>(true);
+    const [shouldScrubNonDialogue, setShouldScrubNonDialogue] = useState<boolean>(false);
     const [shouldScrubParentheses, setShouldScrubParentheses] = useState<boolean>(true);
     const [shouldScrubBrackets, setShouldScrubBrackets] = useState<boolean>(true);
     const [shouldScrubCustomChar, setShouldScrubCustomChar] = useState<boolean>(false);
     const [customStartChar, setCustomStartChar] = useState<string>(TAG_OPEN);
     const [customEndChar, setCustomEndChar] = useState<string>(TAG_CLOSE);
+    const [scrubCharacters, setScrubCharacters] = useState<ScrubCharacterSet[]>([]);
 
     const getScrubChars = () => {
         let scrubCharacterSets: ScrubCharacterSet[] = [];
@@ -57,7 +50,7 @@ const ControlsContainer = ({
     }
 
     useEffect(() => {
-        handleScrubChars(getScrubChars());
+        setScrubCharacters(getScrubChars());
     },[customStartChar, customEndChar, shouldScrubBrackets, shouldScrubParentheses, shouldScrubCustomChar, shouldScrubNonDialogue]);
 
     const handleActiveTab = (tabId: string) => {
@@ -82,6 +75,85 @@ const ControlsContainer = ({
 
     const handleCustomEndCharChange = (event: any) => {
         setCustomEndChar(event.target.value);
+    }
+
+    const handleLineStartInputChange = (event: any) => {
+        if (event.target.validity.valid) {
+            if (!isNaN(event.target.valueAsNumber)) {
+                setLineStartInput(event.target.valueAsNumber);
+            }
+            else {
+                setLineStartInput(1);
+            }
+        }
+        else {
+            handleInvalidNumber();
+        }
+    };
+
+    const handleLineStopInputChange = (event: any) => {
+        if (event.target.validity.valid) {
+            setLineStopInput(event.target.valueAsNumber);
+        }
+        else {
+            handleInvalidNumber();
+        }
+    };
+
+    const handleShouldOffsetToggle = () => {
+        setShouldOffsetTimecodes(!shouldOffsetTimecodes);
+    }
+
+    const handleShouldScrubToggle = () => {
+        setShouldScrubNonDialogue(!shouldScrubNonDialogue);
+    }
+
+    const handleHoursChange = (event: any) => {
+        if (event.target.validity.valid) {
+        const validNumber = !isNaN(event.target.valueAsNumber) ? event.target.valueAsNumber : 0;
+        const newTimeInput = TimeUtils.getNewTimeWithHours(timeInput, validNumber);
+        handleTimeInputChange(newTimeInput);
+        }
+        else {
+        handleInvalidNumber();
+        }
+    };
+
+    const handleMinutesChange = (event: any) => {
+        if (event.target.validity.valid) {
+        const validNumber = !isNaN(event.target.valueAsNumber) ? event.target.valueAsNumber : 0;
+        const newTimeInput = TimeUtils.getNewTimeWithMinutes(timeInput, validNumber);
+        handleTimeInputChange(newTimeInput);
+        }
+        else {
+        handleInvalidNumber();
+        }
+    };
+
+    const handleSecondsChange = (event: any) => {
+        if (event.target.validity.valid) {
+        const validNumber = !isNaN(event.target.valueAsNumber) ? event.target.valueAsNumber : 0;
+        const newTimeInput = TimeUtils.getNewTimeWithSeconds(timeInput, validNumber);
+        handleTimeInputChange(newTimeInput);
+        }
+        else {
+        handleInvalidNumber();
+        }
+    };
+
+    const handleMillisecondsChange = (event: any) => {
+        if (event.target.validity.valid) {
+        const validNumber = !isNaN(event.target.valueAsNumber) ? event.target.valueAsNumber : 0;
+        const newTimeInput = TimeUtils.getNewTimeWithMilliseconds(timeInput, validNumber);
+        handleTimeInputChange(newTimeInput);
+        }
+        else {
+        handleInvalidNumber();
+        }
+    };
+
+    const handleInvalidNumber = () => {
+        console.log("TODO: Handle Invalid number input later");
     }
 
     return (
@@ -163,6 +235,20 @@ const ControlsContainer = ({
                         </div>
                     </fieldset>
                 </form>
+                <div className="flex-column">
+                    <div className="flex-row centered-row">
+                        <SubtitleFixer 
+                            lineStartInput={lineStartInput}
+                            lineStopInput={lineStopInput}
+                            scrubCharacters={scrubCharacters}
+                            shouldOffsetTimecodes={shouldOffsetTimecodes}
+                            shouldScrubNonDialogue={shouldScrubNonDialogue}
+                            timeInput={timeInput}
+                            textInput={textInput}
+                            handleFixSubtitles={handleFixSubtitles}
+                        />
+                    </div>
+                </div>
             </TabWrapper>
         </TabbedContainer>
     );

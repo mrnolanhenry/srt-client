@@ -57,4 +57,10 @@
   #scrubNonDialogueRow {
     font-size: 12px;
   }
+
+  .inner-tabcontent-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
 }
