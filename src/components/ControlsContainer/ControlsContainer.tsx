@@ -8,28 +8,30 @@ import TabbedContainer from '../TabbedContainer/TabbedContainer';
 import TabWrapper from '../TabWrapper/TabWrapper';
 import CustomCharacterControl from '../CustomCharacterControl/CustomCharacterControl';
 import { BRACKET_CLOSE, BRACKET_OPEN, PARENTHESES_CLOSE, PARENTHESES_OPEN, TAG_CLOSE, TAG_OPEN } from '../../constants/constants';
+import SubtitleFixer from '../SubtitleFixer/SubtitleFixer';
 
 interface ControlsContainerProps {
     lineStartInput: number;
     lineStopInput: number;
     shouldOffsetTimecodes: boolean;
     shouldScrubNonDialogue: boolean;
+    textInput: string;
     timeInput: Date;
+    handleFixSubtitles: (cues: VTTCue[]) => void;
     handleHoursChange: (event: any) => void;
     handleMinutesChange: (event: any) => void;
     handleSecondsChange: (event: any) => void;
     handleMillisecondsChange: (event: any) => void;
     handleLineStartInputChange: (event: any) => void;
     handleLineStopInputChange: (event: any) => void;
-    handleScrubChars: (scrubCharacterSets: ScrubCharacterSet[]) => void;
     handleShouldOffsetToggle: () => void;
     handleShouldScrubToggle: () => void;
 }
 
 const ControlsContainer = ({ 
-    lineStartInput, lineStopInput, shouldOffsetTimecodes, shouldScrubNonDialogue, timeInput, 
-    handleHoursChange, handleMinutesChange, handleSecondsChange, handleMillisecondsChange, 
-    handleLineStartInputChange, handleLineStopInputChange, handleScrubChars,
+    lineStartInput, lineStopInput, shouldOffsetTimecodes, shouldScrubNonDialogue, textInput, timeInput, 
+    handleFixSubtitles, handleHoursChange, handleMinutesChange, handleSecondsChange, handleMillisecondsChange, 
+    handleLineStartInputChange, handleLineStopInputChange,
     handleShouldOffsetToggle, handleShouldScrubToggle }: ControlsContainerProps) => {
     const SUBTITLE_CONTROLS = "subtitleControls";
 
@@ -39,6 +41,7 @@ const ControlsContainer = ({
     const [shouldScrubCustomChar, setShouldScrubCustomChar] = useState<boolean>(false);
     const [customStartChar, setCustomStartChar] = useState<string>(TAG_OPEN);
     const [customEndChar, setCustomEndChar] = useState<string>(TAG_CLOSE);
+    const [scrubCharacters, setScrubCharacters] = useState<ScrubCharacterSet[]>([]);
 
     const getScrubChars = () => {
         let scrubCharacterSets: ScrubCharacterSet[] = [];
@@ -57,7 +60,7 @@ const ControlsContainer = ({
     }
 
     useEffect(() => {
-        handleScrubChars(getScrubChars());
+        setScrubCharacters(getScrubChars());
     },[customStartChar, customEndChar, shouldScrubBrackets, shouldScrubParentheses, shouldScrubCustomChar, shouldScrubNonDialogue]);
 
     const handleActiveTab = (tabId: string) => {
@@ -163,6 +166,20 @@ const ControlsContainer = ({
                         </div>
                     </fieldset>
                 </form>
+                <div className="flex-column">
+                    <div className="flex-row centered-row">
+                        <SubtitleFixer 
+                            lineStartInput={lineStartInput}
+                            lineStopInput={lineStopInput}
+                            scrubCharacters={scrubCharacters}
+                            shouldOffsetTimecodes={shouldOffsetTimecodes}
+                            shouldScrubNonDialogue={shouldScrubNonDialogue}
+                            timeInput={timeInput}
+                            textInput={textInput}
+                            handleFixSubtitles={handleFixSubtitles}
+                        />
+                    </div>
+                </div>
             </TabWrapper>
         </TabbedContainer>
     );

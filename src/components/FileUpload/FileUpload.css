@@ -2,15 +2,19 @@
     display: none;
 }
 
+.file-upload-button {
+    background-color: color-mix(in oklab, rgba(82, 131, 136, 1) 75%, black);
+    border: 1px solid color-mix(in oklab, rgba(82, 131, 136, 1) 75%, black);
+}
+
+.file-upload-button:hover {
+    background-color: color-mix(in oklab, rgba(82, 131, 136, 1) 90%, black);
+    border-color: color-mix(in oklab, rgba(82, 131, 136, 1) 90%, black);
+}
+
 .file-upload-label {
     box-sizing: border-box;
-    /* border-width: 1px;
-    border-style: solid;
-    border-color: white;
-    border-radius: 8px; */
     cursor: pointer;
-    padding: 0.6em 1.2em;
     font-size: 14px;
-    width: 100%;
     text-align: center;
 }

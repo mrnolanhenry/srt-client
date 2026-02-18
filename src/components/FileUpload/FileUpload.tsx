@@ -4,11 +4,12 @@ import type { FileContent } from '../../interfaces/FileContent';
 import './FileUpload.css';
 
 interface FileUploadProps {
+  buttonClassNames?: string;
   label: string;
   handleUploadCallback: (event: any) => void;
 }
 
-const FileUpload = ({ label, handleUploadCallback }: FileUploadProps) => {
+const FileUpload = ({ buttonClassNames, label, handleUploadCallback }: FileUploadProps) => {
   const handleFileChange = (event: BaseSyntheticEvent) => {
     const files = event.target.files as FileList;
     if (files && files.length > 0) {
@@ -38,10 +39,12 @@ const FileUpload = ({ label, handleUploadCallback }: FileUploadProps) => {
 
   return (
     <>
-      <input multiple type="file" id="srtInputFile" name="srtInputFile" accept=".srt, .txt" onChange={handleFileChange} />
-      <label htmlFor="srtInputFile" className="file-upload-label">
-        {label}
-      </label>
+      <button className={`file-upload-button ${buttonClassNames ?? ''}`}>
+        <input multiple type="file" id="srtInputFile" name="srtInputFile" accept=".srt, .txt" onChange={handleFileChange} />
+        <label htmlFor="srtInputFile" className="file-upload-label">
+          {label}
+        </label>
+      </button>
     </>
   );
 };

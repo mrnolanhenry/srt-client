@@ -4,23 +4,22 @@ import Time from './classes/Time';
 import ControlsContainer from './components/ControlsContainer/ControlsContainer';
 import InputContainer from './components/InputContainer/InputContainer';
 import OutputContainer from './components/OutputContainer/OutputContainer';
-import StickyFooter from './components/StickyFooter/StickyFooter';
-import SubtitleFixer from './components/SubtitleFixer/SubtitleFixer';
 import useDebounce from './hooks/useDebounce';
 import type { FileContent } from './interfaces/FileContent';
 import TimeUtils from './utilities/TimeUtils';
 import SubtitleUtils from './utilities/SubtitleUtils';
 import VideoContainer from './components/VideoContainer/VideoContainer';
-import { type ScrubCharacterSet } from './interfaces/ScrubCharacterSet';
 
 function App() {
-  const INSTRUCTIONS_TEXT = `Update timecodes on existing .srt files with ease!
+  const INSTRUCTIONS_INPUT_TEXT = `Update timecodes on existing .srt files with ease!
     \nEnter your subtitles here or upload multiple .srt files using the button in the 'Uploaded Files' tab. There you can reference your other files to work with.
     \nBy default, the contents of the first file uploaded will appear here.
     \nMake any edits needed in this tab, then choose settings in the 'Controls' area to adjust the timecodes on specific line numbers and click the 'Fix' button.`;
+  const INSTRUCTIONS_OUTPUT_TEXT = `Your fixed results with new timecodes will appear here.
+    \nClick the Download tab to name and download the fixed .srt file.`
   // TODO: Consider making textInputs a single string vs. string[]
-  const [textInputs, setTextInputs] = useState<string[]>([INSTRUCTIONS_TEXT]);
-  const [textOutput, setTextOutput] = useState<string>('Your fixed .srt file with new timecodes will appear here.');
+  const [textInputs, setTextInputs] = useState<string[]>([INSTRUCTIONS_INPUT_TEXT]);
+  const [textOutput, setTextOutput] = useState<string>(INSTRUCTIONS_OUTPUT_TEXT);
   const [cues, setCues] = useState<VTTCue[]>([]);
   const debouncedCues = useDebounce(cues, 500);
   const [fileContents, setFileContents] = useState<FileContent[]>([]);
@@ -29,16 +28,10 @@ function App() {
   const [timeInput, setTimeInput] = useState<Time>(new Time(0, 0, 0, 0));
   const [shouldOffsetTimecodes, setShouldOffsetTimecodes] = useState<boolean>(true);
   const [shouldScrubNonDialogue, setShouldScrubNonDialogue] = useState<boolean>(false);
-  const [scrubCharacters, setScrubCharacters] = useState<ScrubCharacterSet[]>([]);
+
 
   const refInputTextArea = useRef<HTMLTextAreaElement>(null);
   const refOutputTextArea = useRef<HTMLTextAreaElement>(null);
-
-  const handleScrubChars = (scrubCharacterSets: ScrubCharacterSet[]) => {
-    console.log("scrubCharacterSets");
-    console.log(scrubCharacterSets);
-    setScrubCharacters(scrubCharacterSets);
-  };
 
   const handleScroll = (event: any) => {
     const { scrollTop, scrollLeft } = event.target;
@@ -159,24 +152,6 @@ function App() {
     setShouldScrubNonDialogue(!shouldScrubNonDialogue);
   }
 
-  const handleDownload = () => {
-    const filename = 'output.srt';
-    downloadTextFile({name: filename, content: textOutput});
-  };
-
-  const downloadTextFile = (file: FileContent) => {
-    const { name, content } = file;
-    const blob = new Blob([content as BlobPart], { type: 'text/plain;charset=utf-8' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = name;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
-  };
-
   return (
     <>
       <div id="appContainer">
@@ -196,14 +171,15 @@ function App() {
                   lineStopInput={lineStopInput as number}
                   shouldOffsetTimecodes={shouldOffsetTimecodes}
                   shouldScrubNonDialogue={shouldScrubNonDialogue}
+                  textInput={textInputs[0]}
                   timeInput={timeInput}
+                  handleFixSubtitles={handleFixSubtitles}
                   handleHoursChange={handleHoursChange}
                   handleMinutesChange={handleMinutesChange}
                   handleSecondsChange={handleSecondsChange}
                   handleMillisecondsChange={handleMillisecondsChange}
                   handleLineStartInputChange={handleLineStartInputChange}
                   handleLineStopInputChange={handleLineStopInputChange}
-                  handleScrubChars={handleScrubChars}
                   handleShouldOffsetToggle={handleShouldOffsetToggle}
                   handleShouldScrubToggle={handleShouldScrubToggle}
                 />
@@ -239,29 +215,6 @@ function App() {
             </div>
           </div>
         </div>
-        <StickyFooter>
-          <div className="flex-row spaced-around-row padded-row">
-            <div className="flex-column">
-              <div className="flex-row">
-                <SubtitleFixer 
-                  lineStartInput={lineStartInput}
-                  lineStopInput={lineStopInput}
-                  scrubCharacters={scrubCharacters}
-                  shouldOffsetTimecodes={shouldOffsetTimecodes}
-                  shouldScrubNonDialogue={shouldScrubNonDialogue}
-                  timeInput={timeInput}
-                  textInput={textInputs[0]}
-                  handleFixCallback={handleFixSubtitles}
-                />
-              </div>
-            </div>
-            <div className="flex-column">
-              <div className="flex-row">
-                <button id="btnDownload" onClick={handleDownload}>Download</button> 
-              </div>
-            </div>
-          </div>
-        </StickyFooter>
       </div>
     </>
   )
