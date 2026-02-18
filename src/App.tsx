@@ -6,7 +6,6 @@ import InputContainer from './components/InputContainer/InputContainer';
 import OutputContainer from './components/OutputContainer/OutputContainer';
 import useDebounce from './hooks/useDebounce';
 import type { FileContent } from './interfaces/FileContent';
-import TimeUtils from './utilities/TimeUtils';
 import SubtitleUtils from './utilities/SubtitleUtils';
 import VideoContainer from './components/VideoContainer/VideoContainer';
 
@@ -23,11 +22,7 @@ function App() {
   const [cues, setCues] = useState<VTTCue[]>([]);
   const debouncedCues = useDebounce(cues, 500);
   const [fileContents, setFileContents] = useState<FileContent[]>([]);
-  const [lineStartInput, setLineStartInput] = useState<number>(1);
-  const [lineStopInput, setLineStopInput] = useState<number | null>(null);
   const [timeInput, setTimeInput] = useState<Time>(new Time(0, 0, 0, 0));
-  const [shouldOffsetTimecodes, setShouldOffsetTimecodes] = useState<boolean>(true);
-  const [shouldScrubNonDialogue, setShouldScrubNonDialogue] = useState<boolean>(false);
 
 
   const refInputTextArea = useRef<HTMLTextAreaElement>(null);
@@ -77,79 +72,8 @@ function App() {
     setTextOutput(newLines);
   };
 
-  const handleHoursChange = (event: any) => {
-    if (event.target.validity.valid) {
-      const validNumber = !isNaN(event.target.valueAsNumber) ? event.target.valueAsNumber : 0;
-      const newTimeInput = TimeUtils.getNewTimeWithHours(timeInput, validNumber);
-      setTimeInput(newTimeInput);
-    }
-    else {
-      console.log("TODO: Handle Invalid number input later");
-    }
-  };
-
-  const handleMinutesChange = (event: any) => {
-    if (event.target.validity.valid) {
-      const validNumber = !isNaN(event.target.valueAsNumber) ? event.target.valueAsNumber : 0;
-      const newTimeInput = TimeUtils.getNewTimeWithMinutes(timeInput, validNumber);
-      setTimeInput(newTimeInput);
-    }
-    else {
-      console.log("TODO: Handle Invalid number input later");
-    }
-  };
-
-  const handleSecondsChange = (event: any) => {
-    if (event.target.validity.valid) {
-      const validNumber = !isNaN(event.target.valueAsNumber) ? event.target.valueAsNumber : 0;
-      const newTimeInput = TimeUtils.getNewTimeWithSeconds(timeInput, validNumber);
-      setTimeInput(newTimeInput);
-    }
-    else {
-      console.log("TODO: Handle Invalid number input later");
-    }
-  };
-
-  const handleMillisecondsChange = (event: any) => {
-    if (event.target.validity.valid) {
-      const validNumber = !isNaN(event.target.valueAsNumber) ? event.target.valueAsNumber : 0;
-      const newTimeInput = TimeUtils.getNewTimeWithMilliseconds(timeInput, validNumber);
-      setTimeInput(newTimeInput);
-    }
-    else {
-      console.log("TODO: Handle Invalid number input later");
-    }
-  };
-
-  const handleLineStartInputChange = (event: any) => {
-    if (event.target.validity.valid) {
-      if (!isNaN(event.target.valueAsNumber)) {
-        setLineStartInput(event.target.valueAsNumber);
-      }
-      else {
-        setLineStartInput(1);
-      }
-    }
-    else {
-      console.log("TODO: Handle Invalid number input later");
-    }
-  };
-
-  const handleLineStopInputChange = (event: any) => {
-    if (event.target.validity.valid) {
-      setLineStopInput(event.target.valueAsNumber);
-    }
-    else {
-      console.log("TODO: Handle Invalid number input later");
-    }
-  };
-
-  const handleShouldOffsetToggle = () => {
-    setShouldOffsetTimecodes(!shouldOffsetTimecodes);
-  }
-
-  const handleShouldScrubToggle = () => {
-    setShouldScrubNonDialogue(!shouldScrubNonDialogue);
+  const handleTimeInputChange = (newTime: Time) => {
+    setTimeInput(newTime);
   }
 
   return (
@@ -167,21 +91,10 @@ function App() {
             <div className="section-row flex-row">
               <div id="controlColumn" className="flex-column centered-column padded-column">
                 <ControlsContainer
-                  lineStartInput={lineStartInput}
-                  lineStopInput={lineStopInput as number}
-                  shouldOffsetTimecodes={shouldOffsetTimecodes}
-                  shouldScrubNonDialogue={shouldScrubNonDialogue}
                   textInput={textInputs[0]}
                   timeInput={timeInput}
                   handleFixSubtitles={handleFixSubtitles}
-                  handleHoursChange={handleHoursChange}
-                  handleMinutesChange={handleMinutesChange}
-                  handleSecondsChange={handleSecondsChange}
-                  handleMillisecondsChange={handleMillisecondsChange}
-                  handleLineStartInputChange={handleLineStartInputChange}
-                  handleLineStopInputChange={handleLineStopInputChange}
-                  handleShouldOffsetToggle={handleShouldOffsetToggle}
-                  handleShouldScrubToggle={handleShouldScrubToggle}
+                  handleTimeInputChange={handleTimeInputChange}
                 />
               </div>
               <div id="videoContainerColumn" className="flex-column centered-column padded-column">
