@@ -1,0 +1,14 @@
+.file-download {
+    label,
+    input {
+        margin-right: 2px;
+    }
+
+    label {
+        font-size: 14px;
+    }
+
+    input {
+        min-height: 20px;
+    }
+}

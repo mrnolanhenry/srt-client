@@ -106,8 +106,6 @@ abstract class SubtitleUtils {
         for (let i =0; i < scrubCharacterSets.length; i++) {
             const characterSet = scrubCharacterSets[i];
             newLine = StringUtils.removeStartAndEndChars(newLine, characterSet.startChar, characterSet.endChar);
-            console.log("------newLine---------");
-            console.log(newLine);
         }
         return newLine;
     }

@@ -90,7 +90,7 @@ const VideoUploadAndPlayer = ({cues, videoRef, timeInput}: VideoUploadAndPlayerP
     }
   };
 
-    const goToNextCue = () => {
+  const goToNextCue = () => {
     if (videoRef.current) {
       const currentTime = videoRef.current.currentTime;
       const nextCue = cues.find(cue => cue.startTime > currentTime);

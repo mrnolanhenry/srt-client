@@ -206,6 +206,7 @@ function App() {
               </div>
               <div id="outputContainerColumn" className="flex-column padded-column">
                 <OutputContainer
+                    downloadFileName={fileContents[0] ? fileContents[0].name : 'output.srt'}
                     scrollRef={refOutputTextArea as React.RefObject<HTMLTextAreaElement>}
                     textOutput={textOutput}
                     handleScroll={handleScroll}
