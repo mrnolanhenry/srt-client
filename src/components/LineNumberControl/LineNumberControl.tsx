@@ -1,4 +1,4 @@
-import NullableNumberInput from '../NullableNumberInput/NullableNumberInput';
+import NullableNumberInput from '../common/NullableNumberInput/NullableNumberInput';
 import './LineNumberControl.css';
 
 interface LineNumberControlProps {

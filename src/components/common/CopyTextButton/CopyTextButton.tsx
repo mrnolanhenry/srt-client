@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import './CopyTextButton.css';
-import { COPY_CHAR } from '../../constants/constants';
+import { COPY_CHAR } from '../../../constants/constants';
 
 interface CopyTextButtonProps {
   id: string;

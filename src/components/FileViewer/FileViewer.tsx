@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import type { FileContent } from '../../interfaces/FileContent';
 import './FileViewer.css';
 import FileUpload from '../FileUpload/FileUpload';
-import CopyTextArea from '../CopyTextArea/CopyTextArea';
+import CopyTextArea from '../common/CopyTextArea/CopyTextArea';
 import { UPLOAD_CHAR } from '../../constants/constants';
 
 interface FileViewerProps {
