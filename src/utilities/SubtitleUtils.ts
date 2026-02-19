@@ -110,7 +110,7 @@ abstract class SubtitleUtils {
         return newLine;
     }
 
-    static offsetCues(cues: VTTCue[], offset: number, lineNumberToStartOffset: number, lineNumberToStopOffset: number | null = null, shouldSequence: boolean = true): VTTCue[] {
+    static offsetCues(cues: VTTCue[], offset: number, lineNumberToStartOffset: number | null, lineNumberToStopOffset: number | null = null, shouldSequence: boolean = true): VTTCue[] {
         let newCues: VTTCue[] = [];
         cues.forEach((cue, index) => {
             const cueLines = cue.text.split("\n");
@@ -118,8 +118,9 @@ abstract class SubtitleUtils {
                 const lineNumber = Number(cue.id);
                 let newCueStartTime = cue.startTime;
                 let newCueEndTime = cue.endTime;
+                const isPastStartOffsetNumber = lineNumberToStopOffset !== null && lineNumber >= (lineNumberToStartOffset as number);
                 const isPastStopOffsetNumber = (lineNumberToStopOffset !== null && lineNumber > lineNumberToStopOffset);
-                if (lineNumber >= lineNumberToStartOffset && !isPastStopOffsetNumber) {
+                if (isPastStartOffsetNumber && !isPastStopOffsetNumber) {
                     newCueStartTime = ((newCueStartTime * 1000) + offset) / 1000;
                     newCueEndTime = ((newCueEndTime * 1000) + offset) / 1000;
                 }

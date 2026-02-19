@@ -6,7 +6,7 @@ import TimeUtils from "../../utilities/TimeUtils";
 import './SubtitleFixer.css';
 
 interface SubtitleFixerProps {
-  lineStartInput: number;
+  lineStartInput: number | null;
   lineStopInput: number | null;
   scrubCharacters: ScrubCharacterSet[];
   shouldOffsetTimecodes: boolean;
@@ -50,9 +50,9 @@ const SubtitleFixer = ({ lineStartInput, lineStopInput, scrubCharacters, shouldO
     return newStartTime - oldStartTime;
   };
 
-  const getFirstCueToOffset = (cues: VTTCue[], lineNumberToStartOffset : number): VTTCue | undefined => {
+  const getFirstCueToOffset = (cues: VTTCue[], lineNumberToStartOffset : number | null): VTTCue | undefined => {
     return cues.find((cue: VTTCue) => {
-      return StringUtils.isLineNumber(cue.id) && Number(cue.id) >= lineNumberToStartOffset;
+      return lineNumberToStartOffset !== null && StringUtils.isLineNumber(cue.id) && Number(cue.id) >= lineNumberToStartOffset;
     });
   };
   

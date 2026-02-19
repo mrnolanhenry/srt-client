@@ -1,7 +1,7 @@
 import './VideoContainer.css';
 import { useRef, useState } from 'react';
-import TabbedContainer from '../TabbedContainer/TabbedContainer';
-import TabWrapper from '../TabWrapper/TabWrapper';
+import TabbedContainer from '../common/TabbedContainer/TabbedContainer';
+import TabWrapper from '../common/TabWrapper/TabWrapper';
 import VideoUploadAndPlayer from '../VideoUploadAndPlayer/VideoUploadAndPlayer';
 
 interface VideoContainerProps {

@@ -2,9 +2,9 @@ import type { FileContent } from '../../interfaces/FileContent';
 import './InputContainer.css';
 import FileViewer from '../FileViewer/FileViewer';
 import { useState } from 'react';
-import CopyTextArea from '../CopyTextArea/CopyTextArea';
-import TabbedContainer from '../TabbedContainer/TabbedContainer';
-import TabWrapper from '../TabWrapper/TabWrapper';
+import CopyTextArea from '../common/CopyTextArea/CopyTextArea';
+import TabbedContainer from '../common/TabbedContainer/TabbedContainer';
+import TabWrapper from '../common/TabWrapper/TabWrapper';
 
 interface InputContainerProps {
   fileContents: FileContent[];

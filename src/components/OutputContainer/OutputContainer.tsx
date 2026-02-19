@@ -1,8 +1,8 @@
 import './OutputContainer.css';
 import { useState } from 'react';
-import CopyTextArea from '../CopyTextArea/CopyTextArea';
-import TabbedContainer from '../TabbedContainer/TabbedContainer';
-import TabWrapper from '../TabWrapper/TabWrapper';
+import CopyTextArea from '../common/CopyTextArea/CopyTextArea';
+import TabbedContainer from '../common/TabbedContainer/TabbedContainer';
+import TabWrapper from '../common/TabWrapper/TabWrapper';
 import { DOWNLOAD_CHAR } from '../../constants/constants';
 import FileDownload from '../FileDownload/FileDownload';
 

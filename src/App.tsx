@@ -15,7 +15,7 @@ function App() {
     \nBy default, the contents of the first file uploaded will appear here.
     \nMake any edits needed in this tab, then choose settings in the 'Controls' area to adjust the timecodes on specific line numbers and click the 'Fix' button.`;
   const INSTRUCTIONS_OUTPUT_TEXT = `Your fixed results with new timecodes will appear here.
-    \nClick the Download tab to name and download the fixed .srt file.`
+    \nClick the 'Download' tab to name and download the fixed .srt file.`
   // TODO: Consider making textInputs a single string vs. string[]
   const [textInputs, setTextInputs] = useState<string[]>([INSTRUCTIONS_INPUT_TEXT]);
   const [textOutput, setTextOutput] = useState<string>(INSTRUCTIONS_OUTPUT_TEXT);
