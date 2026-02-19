@@ -20,9 +20,10 @@ interface ControlsContainerProps {
 
 const ControlsContainer = ({ textInput, timeInput, handleFixSubtitles, handleTimeInputChange }: ControlsContainerProps) => {
     const SUBTITLE_CONTROLS = "subtitleControls";
+    const DEFAULT_LINE_START = 1;
 
     const [activeTab, setActiveTab] = useState<string>(SUBTITLE_CONTROLS);
-    const [lineStartInput, setLineStartInput] = useState<number>(1);
+    const [lineStartInput, setLineStartInput] = useState<number | null>(DEFAULT_LINE_START);
     const [lineStopInput, setLineStopInput] = useState<number | null>(null);
     const [shouldOffsetTimecodes, setShouldOffsetTimecodes] = useState<boolean>(true);
     const [shouldScrubNonDialogue, setShouldScrubNonDialogue] = useState<boolean>(false);
@@ -77,27 +78,12 @@ const ControlsContainer = ({ textInput, timeInput, handleFixSubtitles, handleTim
         setCustomEndChar(event.target.value);
     }
 
-    const handleLineStartInputChange = (event: any) => {
-        if (event.target.validity.valid) {
-            if (!isNaN(event.target.valueAsNumber)) {
-                setLineStartInput(event.target.valueAsNumber);
-            }
-            else {
-                setLineStartInput(1);
-            }
-        }
-        else {
-            handleInvalidNumber();
-        }
+    const handleLineStartInputChange = (value: number | null) => {
+        setLineStartInput(value);
     };
 
-    const handleLineStopInputChange = (event: any) => {
-        if (event.target.validity.valid) {
-            setLineStopInput(event.target.valueAsNumber);
-        }
-        else {
-            handleInvalidNumber();
-        }
+    const handleLineStopInputChange = (value: number | null) => {
+        setLineStopInput(value);
     };
 
     const handleShouldOffsetToggle = () => {
@@ -175,7 +161,8 @@ const ControlsContainer = ({ textInput, timeInput, handleFixSubtitles, handleTim
                         </legend>
                         <div className="section-row flex-row spaced-between-row full-width">
                             <div className="flex-column padded-column">
-                                <LineNumberControl 
+                                <LineNumberControl
+                                    defaultLineStart={DEFAULT_LINE_START}
                                     lineStartInput={lineStartInput}
                                     lineStopInput={lineStopInput}
                                     handleLineStartInputChange={handleLineStartInputChange}

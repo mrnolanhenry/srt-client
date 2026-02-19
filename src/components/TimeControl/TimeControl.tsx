@@ -1,7 +1,7 @@
 import './TimeControl.css';
 
 interface TimeControlProps {
-  lineStartInput: number;
+  lineStartInput: number | null;
   timeInput: Date;
   handleHoursChange: (event: any) => void;
   handleMinutesChange: (event: any) => void;

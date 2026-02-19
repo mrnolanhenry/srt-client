@@ -1,13 +1,15 @@
+import NullableNumberInput from '../NullableNumberInput/NullableNumberInput';
 import './LineNumberControl.css';
 
 interface LineNumberControlProps {
-  lineStartInput: number;
+  defaultLineStart: number;
+  lineStartInput: number | null;
   lineStopInput: number | null;
   handleLineStartInputChange: (event: any) => void;
   handleLineStopInputChange: (event: any) => void;
 }
 
-const LineNumberControl = ({ lineStartInput, lineStopInput, handleLineStartInputChange, handleLineStopInputChange }: LineNumberControlProps) => {
+const LineNumberControl = ({ defaultLineStart, lineStartInput, lineStopInput, handleLineStartInputChange, handleLineStopInputChange }: LineNumberControlProps) => {
 
   return (
     <>
@@ -18,9 +20,26 @@ const LineNumberControl = ({ lineStartInput, lineStopInput, handleLineStartInput
               <small>Fix Lines Numbered: </small>
             </div>
             <div className="flex-row centered-row">
-              <input type="number" id="lineStartInput" className="line-input" name="lineStartInput" step={1} size={5} onChange={handleLineStartInputChange} value={lineStartInput} />
+              <NullableNumberInput 
+                className="line-input"
+                defaultValidNumber={defaultLineStart}
+                id="lineStartInput" 
+                name="lineStartInput"
+                step={1} 
+                size={5} 
+                value={lineStartInput as number}
+                handleChangeCallback={handleLineStartInputChange}
+              />
               <small className="line-input"> through </small>
-              <input type="number" id="lineStopInput" className="line-input" name="lineStopInput" step={1} size={5} onChange={handleLineStopInputChange} value={lineStopInput as number ?? ""} />
+              <NullableNumberInput  
+                className="line-input"
+                id="lineStopInput"
+                name="lineStopInput"
+                step={1}
+                size={5}
+                value={lineStopInput as number} 
+                handleChangeCallback={handleLineStopInputChange}
+              />
               <small className="line-input">{` (leave blank to adjust to end)`}</small>
             </div>
           </div>            
