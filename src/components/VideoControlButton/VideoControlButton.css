@@ -11,10 +11,12 @@
     border-width: 0;
     padding: 0;
 }
+.video-control-button:focus {
+    outline: none;
+}
 
-.video-control-fake-button.disabled,
-.video-control-button.disabled {
-    color: #5B5B5B;
+.video-control-button-container.disabled {
+    filter: brightness(40%);
 }
 
 .video-control-fake-button {
@@ -51,4 +53,8 @@
 
 .video-control-character {
     padding-left: 4px;
+}
+
+.disabled {
+    cursor: default;
 }

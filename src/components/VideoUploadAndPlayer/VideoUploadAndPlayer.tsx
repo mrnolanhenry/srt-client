@@ -3,6 +3,9 @@ import './VideoUploadAndPlayer.css';
 import { ARROW_LEFT_CHAR, ARROW_RIGHT_CHAR, SPEECH_BUBBLES_CHAR, UPLOAD_CHAR } from '../../constants/constants';
 import VideoControlButton from '../VideoControlButton/VideoControlButton';
 import useDebounce from '../../hooks/useDebounce';
+import fullscreenIcon from '../../assets/fullscreen.png';
+import fullscreenExitIcon from '../../assets/fullscreen_exit.png';
+
 
 interface VideoUploadAndPlayerProps {
   cues: VTTCue[];
@@ -12,6 +15,7 @@ interface VideoUploadAndPlayerProps {
 
 const VideoUploadAndPlayer = ({cues, videoRef, timeInput}: VideoUploadAndPlayerProps) => {
   const [videoSrc, setVideoSrc] = useState<string | null>(null);
+  const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
   const [isNewUpload, setIsNewUpload] = useState(false);
   const [isControlFocused, setIsControlFocused] = useState(false);
   const [isVideoFocused, setIsVideoFocused] = useState(false);
@@ -21,6 +25,20 @@ const VideoUploadAndPlayer = ({cues, videoRef, timeInput}: VideoUploadAndPlayerP
   const label = `Upload Video ${UPLOAD_CHAR}`;
 
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const videoWrapperRef = useRef<HTMLDivElement>(null);
+
+  const toggleFullscreen = () => {
+    if (!document.fullscreenElement && videoWrapperRef.current) {
+      // Request fullscreen on the wrapper element
+      videoWrapperRef.current.requestFullscreen();
+      setIsFullscreen(true);
+    } else {
+      // Exit fullscreen
+      setIsFullscreen(false);
+      document.exitFullscreen();
+    }
+  };
 
   const handleVideoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
@@ -140,9 +158,11 @@ const VideoUploadAndPlayer = ({cues, videoRef, timeInput}: VideoUploadAndPlayerP
 
   return (
     <>
-      <div id="videoRow" className="flex-row centered-row">
+      <div id="videoRow" className="flex-row centered-row" ref={videoWrapperRef}>
         <video
+          className={isFullscreen ? 'fullscreen' : ''}
           controls // Adds default browser controls (play, pause, etc.)
+          controlsList="nofullscreen"
           height="370"
           ref={videoRef}
           src={videoSrc as string}
@@ -153,7 +173,7 @@ const VideoUploadAndPlayer = ({cues, videoRef, timeInput}: VideoUploadAndPlayerP
           onMouseEnter={() => setIsVideoFocused(true)}
           onMouseLeave={() => setIsVideoFocused(false)}
         />
-        <button className={`video-upload-button ${debouncedShouldHideControls ? 'hidden' : ''}`}
+        <button className={`video-upload-button ${isFullscreen ? 'fullscreen' : ''} ${debouncedShouldHideControls ? 'hidden' : ''}`}
           onBlur={() => setIsControlFocused(false)}
           onFocus={() => setIsControlFocused(true)}
           onMouseEnter={() => setIsControlFocused(true)}
@@ -169,7 +189,9 @@ const VideoUploadAndPlayer = ({cues, videoRef, timeInput}: VideoUploadAndPlayerP
             {label}
           </label>
         </button>
-        <div id="videoControlsRow" className={`flex-row centered-row padded-row ${debouncedShouldHideControls ? 'hidden' : ''}`}
+        <div 
+          id="videoControlsRow" 
+          className={`flex-row centered-row padded-row video-controls ${isFullscreen ? 'fullscreen' : ''} ${debouncedShouldHideControls ? 'hidden' : ''}`}
           onBlur={() => setIsControlFocused(false)}
           onFocus={() => setIsControlFocused(true)}
           onMouseEnter={() => setIsControlFocused(true)}
@@ -191,6 +213,13 @@ const VideoUploadAndPlayer = ({cues, videoRef, timeInput}: VideoUploadAndPlayerP
             isDisabled={shouldDisableControls}
             handleClick={goToNextCue}
           />
+          <VideoControlButton
+            hoverText={`${isFullscreen ? "Exit" : "Enter"} Fullscreen`}
+            isDisabled={shouldDisableControls}
+            handleClick={toggleFullscreen}
+          >
+            <img className="img-button" src={isFullscreen ? fullscreenExitIcon : fullscreenIcon} height={12} width={12} />
+          </VideoControlButton>
         </div>
       </div>
     </>
