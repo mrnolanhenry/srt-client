@@ -6,10 +6,12 @@ import VideoUploadAndPlayer from '../VideoUploadAndPlayer/VideoUploadAndPlayer';
 
 interface VideoContainerProps {
     cues: VTTCue[];
+    textOutput: string;
     timeInput: Date;
+    handleFixSubtitles: (cues: VTTCue[]) => void;
 }
 
-const VideoContainer = ({ cues, timeInput }: VideoContainerProps) => {
+const VideoContainer = ({ cues, textOutput, timeInput, handleFixSubtitles }: VideoContainerProps) => {
     const VIDEO_PREVIEW = "videoPreview";
 
     const videoRef = useRef<HTMLVideoElement>(null);
@@ -34,8 +36,10 @@ const VideoContainer = ({ cues, timeInput }: VideoContainerProps) => {
             >
                 <VideoUploadAndPlayer
                     cues={cues}
+                    textOutput={textOutput}
                     timeInput={timeInput}
                     videoRef={videoRef as React.RefObject<HTMLVideoElement>}
+                    handleFixSubtitles={handleFixSubtitles}
                 />
             </TabWrapper>
         </TabbedContainer>

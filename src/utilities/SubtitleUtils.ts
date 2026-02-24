@@ -118,7 +118,7 @@ abstract class SubtitleUtils {
                 const lineNumber = Number(cue.id);
                 let newCueStartTime = cue.startTime;
                 let newCueEndTime = cue.endTime;
-                const isPastStartOffsetNumber = lineNumberToStopOffset !== null && lineNumber >= (lineNumberToStartOffset as number);
+                const isPastStartOffsetNumber = lineNumberToStartOffset !== null && lineNumber >= lineNumberToStartOffset;
                 const isPastStopOffsetNumber = (lineNumberToStopOffset !== null && lineNumber > lineNumberToStopOffset);
                 if (isPastStartOffsetNumber && !isPastStopOffsetNumber) {
                     newCueStartTime = ((newCueStartTime * 1000) + offset) / 1000;
