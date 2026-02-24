@@ -191,35 +191,43 @@ const VideoUploadAndPlayer = ({cues, videoRef, timeInput}: VideoUploadAndPlayerP
         </button>
         <div 
           id="videoControlsRow" 
-          className={`flex-row centered-row padded-row video-controls ${isFullscreen ? 'fullscreen' : ''} ${debouncedShouldHideControls ? 'hidden' : ''}`}
+          className={`flex-row spaced-between-row padded-row video-controls ${isFullscreen ? 'fullscreen' : ''} ${debouncedShouldHideControls ? 'hidden' : ''}`}
           onBlur={() => setIsControlFocused(false)}
           onFocus={() => setIsControlFocused(true)}
           onMouseEnter={() => setIsControlFocused(true)}
           onMouseLeave={() => setIsControlFocused(false)}>
-          <VideoControlButton
-            controlText={ARROW_LEFT_CHAR}
-            hoverText="Previous Subtitle"
-            isDisabled={shouldDisableControls}
-            handleClick={goToPreviousCue}
-          />
-          <VideoControlButton
-            controlText={SPEECH_BUBBLES_CHAR}
-            isClickable={false}
-            isDisabled={shouldDisableControls}
-          />
-          <VideoControlButton
-            controlText={ARROW_RIGHT_CHAR}
-            hoverText="Next Subtitle"
-            isDisabled={shouldDisableControls}
-            handleClick={goToNextCue}
-          />
-          <VideoControlButton
-            hoverText={`${isFullscreen ? "Exit" : "Enter"} Fullscreen`}
-            isDisabled={shouldDisableControls}
-            handleClick={toggleFullscreen}
-          >
-            <img className="img-button" src={isFullscreen ? fullscreenExitIcon : fullscreenIcon} height={12} width={12} />
-          </VideoControlButton>
+            <div id="videoControlsColLeft" className="flex-column">
+              <div id="videoControlsRowLeft" className="flex-row">
+                <VideoControlButton
+                  controlText={ARROW_LEFT_CHAR}
+                  hoverText="Previous Subtitle"
+                  isDisabled={shouldDisableControls}
+                  handleClick={goToPreviousCue}
+                />
+                <VideoControlButton
+                  controlText={SPEECH_BUBBLES_CHAR}
+                  isClickable={false}
+                  isDisabled={shouldDisableControls}
+                />
+                <VideoControlButton
+                  controlText={ARROW_RIGHT_CHAR}
+                  hoverText="Next Subtitle"
+                  isDisabled={shouldDisableControls}
+                  handleClick={goToNextCue}
+                />
+              </div>
+            </div>
+            <div id="videoControlsColRight" className="flex-column">
+              <div id="videoControlsRowRight" className="flex-row">
+                <VideoControlButton
+                  hoverText={`${isFullscreen ? "Exit" : "Enter"} Fullscreen`}
+                  isDisabled={shouldDisableControls}
+                  handleClick={toggleFullscreen}
+                >
+                  <img className="img-button" src={isFullscreen ? fullscreenExitIcon : fullscreenIcon} height={12} width={12} />
+                </VideoControlButton>
+              </div>
+            </div>
         </div>
       </div>
     </>

@@ -1,7 +1,11 @@
+.video-control-button-container {
+    z-index: 999;
+}
+
 .video-control-fake-button,
 .video-control-button {
     position: absolute;
-    margin: 16px 22px 0 0;
+    margin: 17px 22px 0 0;
     float: right;
     z-index: 999;
     transition: .3s;
