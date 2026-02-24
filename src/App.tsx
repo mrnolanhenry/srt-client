@@ -100,7 +100,9 @@ function App() {
               <div id="videoContainerColumn" className="flex-column centered-column padded-column">
                 <VideoContainer
                     cues={debouncedCues}
+                    textOutput={textOutput}
                     timeInput={timeInput}
+                    handleFixSubtitles={handleFixSubtitles}
                 />
               </div>
             </div>

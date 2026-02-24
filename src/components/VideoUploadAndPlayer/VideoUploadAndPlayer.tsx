@@ -1,19 +1,22 @@
 import React, { useState, useRef, useEffect } from 'react';
 import './VideoUploadAndPlayer.css';
-import { ARROW_LEFT_CHAR, ARROW_RIGHT_CHAR, SPEECH_BUBBLES_CHAR, UPLOAD_CHAR } from '../../constants/constants';
+import { ARROW_LEFT_CHAR, ARROW_RIGHT_CHAR, NUDGE_LEFT_CHAR, NUDGE_RIGHT_CHAR, SPEECH_BUBBLES_CHAR, UPLOAD_CHAR } from '../../constants/constants';
 import VideoControlButton from '../VideoControlButton/VideoControlButton';
 import useDebounce from '../../hooks/useDebounce';
 import fullscreenIcon from '../../assets/fullscreen.png';
 import fullscreenExitIcon from '../../assets/fullscreen_exit.png';
+import SubtitleUtils from '../../utilities/SubtitleUtils';
 
 
 interface VideoUploadAndPlayerProps {
   cues: VTTCue[];
-  videoRef: React.RefObject<HTMLVideoElement>;
+  textOutput: string;
   timeInput: Date;
+  videoRef: React.RefObject<HTMLVideoElement>;
+  handleFixSubtitles: (cues: VTTCue[]) => void;
 }
 
-const VideoUploadAndPlayer = ({cues, videoRef, timeInput}: VideoUploadAndPlayerProps) => {
+const VideoUploadAndPlayer = ({cues, textOutput, timeInput, videoRef, handleFixSubtitles}: VideoUploadAndPlayerProps) => {
   const [videoSrc, setVideoSrc] = useState<string | null>(null);
   const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
   const [isNewUpload, setIsNewUpload] = useState(false);
@@ -22,10 +25,21 @@ const VideoUploadAndPlayer = ({cues, videoRef, timeInput}: VideoUploadAndPlayerP
   const [shouldHideControls, setShouldHideControls] = useState(false);
   const [shouldDisableControls, setShouldDisableControls] = useState(true);
   const debouncedShouldHideControls = useDebounce(shouldHideControls, 200);
+
+  const getTimeInputInSeconds = () => {
+    return (timeInput.getSeconds() * 1000 + timeInput.getMilliseconds()) / 1000;
+  }
+
+  const [defaultTime, setDefaultTime] = useState<number>(getTimeInputInSeconds());
+
+
+  useEffect(() => {
+    setDefaultTime(getTimeInputInSeconds())
+  }, [timeInput]);
+
   const label = `Upload Video ${UPLOAD_CHAR}`;
 
   const fileInputRef = useRef<HTMLInputElement>(null);
-
   const videoWrapperRef = useRef<HTMLDivElement>(null);
 
   const toggleFullscreen = () => {
@@ -122,6 +136,14 @@ const VideoUploadAndPlayer = ({cues, videoRef, timeInput}: VideoUploadAndPlayerP
     }
   };
 
+  const getCurrentCue = () => {
+    if (videoRef.current) {
+      const currentTime = videoRef.current.currentTime;
+      return cues.find(cue => cue.startTime <= currentTime && cue.endTime >= currentTime);
+    }
+    return null;
+  };
+
   const resetVideoTextTracks = () => {
     if (videoRef.current) {
       const tracks = videoRef.current.textTracks;
@@ -150,9 +172,40 @@ const VideoUploadAndPlayer = ({cues, videoRef, timeInput}: VideoUploadAndPlayerP
         tracks[0].addCue(cue);
       });
       if (timeInput) {
-        const timeInputInSeconds = (timeInput.getSeconds() * 1000 + timeInput.getMilliseconds()) / 1000;
-        videoRef.current.currentTime = timeInputInSeconds;
+        videoRef.current.currentTime = defaultTime;
       };
+    }
+  };
+
+  const nudgeCuesBack = () => {
+    handleNudge(-100);
+  }
+
+  const nudgeCuesForward = () => {
+    handleNudge(100);
+  }
+
+  const handleNudge = (offsetInMilliseconds: number): void => {
+    if (videoRef.current) {
+      const lines = textOutput.split("\n");
+
+      // Convert subtitle lines in text output to cues without altering timecodes or scrubbing non-dialogue
+      let newCues: VTTCue[] = SubtitleUtils.convertLinesToCues(lines, false);
+      const currentCue = getCurrentCue();
+
+      if (currentCue) {
+        // THEN perform time code adjustments on the VTTCue[] 
+        newCues = SubtitleUtils.offsetCues(newCues, offsetInMilliseconds, Number(currentCue.id), null, false);
+
+        // set a new defaultTime so the video will go to the start of the cue the user just nudged
+        // after cues get reset.
+        setDefaultTime(((currentCue.startTime * 1000) + offsetInMilliseconds) / 1000);
+
+        handleFixSubtitles(newCues);
+      }
+      else {
+        console.log("Error - could not find current cue.")
+      }
     }
   };
 
@@ -214,6 +267,18 @@ const VideoUploadAndPlayer = ({cues, videoRef, timeInput}: VideoUploadAndPlayerP
                   hoverText="Next Subtitle"
                   isDisabled={shouldDisableControls}
                   handleClick={goToNextCue}
+                />
+                <VideoControlButton
+                  controlText={NUDGE_LEFT_CHAR}
+                  hoverText="Nudge -100ms"
+                  isDisabled={shouldDisableControls}
+                  handleClick={nudgeCuesBack}
+                />
+                <VideoControlButton
+                  controlText={NUDGE_RIGHT_CHAR}
+                  hoverText="Nudge 100ms"
+                  isDisabled={shouldDisableControls}
+                  handleClick={nudgeCuesForward}
                 />
               </div>
             </div>
