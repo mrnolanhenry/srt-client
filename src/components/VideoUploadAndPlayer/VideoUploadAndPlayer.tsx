@@ -204,7 +204,7 @@ const VideoUploadAndPlayer = ({cues, textOutput, timeInput, videoRef, handleFixS
         handleFixSubtitles(newCues);
       }
       else {
-        console.log("Error - could not find current cue.")
+        console.log("Error - could not find cue at current time:" + videoRef.current.currentTime);
       }
     }
   };
