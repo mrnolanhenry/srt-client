@@ -59,8 +59,8 @@
         padding: 6px;
         left: 0;
         bottom: 0;
-        margin: 0 100px 35px 150px;
-        width: calc(100% - 250px);
+        margin: 0 100px 35px 170px;
+        width: calc(100% - 270px);
     }
 
     video.fullscreen {

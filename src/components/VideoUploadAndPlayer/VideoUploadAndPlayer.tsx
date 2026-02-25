@@ -6,6 +6,7 @@ import useDebounce from '../../hooks/useDebounce';
 import fullscreenIcon from '../../assets/fullscreen.png';
 import fullscreenExitIcon from '../../assets/fullscreen_exit.png';
 import SubtitleUtils from '../../utilities/SubtitleUtils';
+import TimeUtils from '../../utilities/TimeUtils';
 
 
 interface VideoUploadAndPlayerProps {
@@ -27,8 +28,8 @@ const VideoUploadAndPlayer = ({cues, textOutput, timeInput, videoRef, handleFixS
   const debouncedShouldHideControls = useDebounce(shouldHideControls, 200);
 
   const getTimeInputInSeconds = () => {
-    return (timeInput.getSeconds() * 1000 + timeInput.getMilliseconds()) / 1000;
-  }
+    return TimeUtils.getTimeInTotalMilliseconds(timeInput) / 1000;
+  };
 
   const [defaultTime, setDefaultTime] = useState<number>(getTimeInputInSeconds());
 
