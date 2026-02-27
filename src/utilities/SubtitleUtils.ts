@@ -131,6 +131,42 @@ abstract class SubtitleUtils {
         });
         return newCues;
     };
+
+    static forceCuesIntoChronologicalOrder(cues: VTTCue[]): VTTCue[] {
+        let newCues: VTTCue[] = [];
+        let maxEndTime = 0;
+        let endTimeOffset = 0;
+        cues.forEach((currentCue, index, cues) => {
+            if (index > 0 && currentCue.startTime < maxEndTime) {
+                // should offset
+                // console.log("________currentCue.id_________");
+                // console.log(currentCue.id);
+                // console.log("endTimeOffset");
+                // console.log(endTimeOffset);
+                let prevCueEndTime = cues[index - 1].endTime;
+                if (currentCue.startTime < prevCueEndTime) {
+                    // should change what the offset is
+                    console.log("-----currentCue.id-----");
+                    console.log(currentCue.id);
+                    endTimeOffset += prevCueEndTime;
+                    console.log("endTimeOffset");
+                    console.log(endTimeOffset);
+                }
+
+                
+                const newCueStartTime = currentCue.startTime + endTimeOffset;
+                const newCueEndTime = currentCue.endTime + endTimeOffset;
+                const newCue = new VTTCue(newCueStartTime, newCueEndTime, currentCue.text);
+                newCue.id = currentCue.id;
+                newCues.push(newCue);
+            }
+            else {
+                newCues.push(currentCue);
+            }
+            maxEndTime = Math.max(maxEndTime, currentCue.endTime)
+        });
+        return newCues;
+    }
 }
 
 export default SubtitleUtils;

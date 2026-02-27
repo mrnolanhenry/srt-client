@@ -12,9 +12,10 @@ interface OutputContainerProps {
     textOutput: string;
     handleScroll: (event: any) => void;
     handleTextOutputChange: (event: any) => void;
+    handleCopyToInputCallback: (value: string) => void;
 }
 
-const OutputContainer = ({ downloadFileName, scrollRef, textOutput, handleScroll, handleTextOutputChange }: OutputContainerProps) => {
+const OutputContainer = ({ downloadFileName, scrollRef, textOutput, handleCopyToInputCallback, handleScroll, handleTextOutputChange }: OutputContainerProps) => {
     const OUTPUT_SUBTITLES = "outputSubtitles";
     const DOWNLOAD_SUBTITLES = "downloadSubtitles";
 
@@ -23,7 +24,6 @@ const OutputContainer = ({ downloadFileName, scrollRef, textOutput, handleScroll
     const handleActiveTab = (tabId: string) => {
         setActiveTab(tabId);
     }
-
 
     return (
         <TabbedContainer
@@ -43,6 +43,7 @@ const OutputContainer = ({ downloadFileName, scrollRef, textOutput, handleScroll
                         id="srtOutput"
                         rows={23}
                         scrollRef={scrollRef}
+                        handleCopyToInputCallback={handleCopyToInputCallback}
                         onChange={handleTextOutputChange} 
                         onScroll={handleScroll}
                         value={textOutput}

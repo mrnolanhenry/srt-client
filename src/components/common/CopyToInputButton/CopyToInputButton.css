@@ -1,19 +1,19 @@
-.copy-text-hover {
+.copy-to-input-hover {
     display: none;
     color: #aaa;
 }
 
-.copy-text-button:hover {
-    .copy-text-hover {
+.copy-to-input-button:hover {
+    .copy-to-input-hover {
         display: block;
     }
 }
 
-.copy-text-span {
+.copy-to-input-span {
     display: flex;
     align-items: center;
 }
 
-.copy-text-character {
+.copy-to-input-character {
     padding-left: 4px;
 }

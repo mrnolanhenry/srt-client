@@ -20,7 +20,7 @@ const CustomCharacterControl = ({ customStartChar, customEndChar, shouldScrubCus
         </div>
       </div>
       <div className="flex-column padded-column">
-        <div id="customCharacterSelect" className="flex-row align-center-row">
+        <div id="customCharacterSelect" className="flex-row align-center">
             <div className="flex-column">
               <div className="flex-row">
                 <fieldset disabled={!shouldScrubCustomChar}>

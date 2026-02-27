@@ -6,3 +6,16 @@ textarea.copy-text-area {
     position: relative;
     width: 100%;
 }
+
+.text-area-button-row {
+    position: absolute;
+    /* Try position: fixed for a behavior that might be better for textareas that extend past the bottom of the page */
+    /* position: fixed; */
+    margin: 10px 22px 0 0;
+    float: right;
+    z-index: 999;
+    cursor: pointer;
+    transition: .3s;
+    color: white;
+    text-shadow: 2px 2px 15px rgba(0, 0, 0);
+}

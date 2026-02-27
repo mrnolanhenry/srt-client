@@ -9,6 +9,7 @@ interface SubtitleFixerProps {
   lineStartInput: number | null;
   lineStopInput: number | null;
   scrubCharacters: ScrubCharacterSet[];
+  shouldForceChronological: boolean;
   shouldOffsetTimecodes: boolean;
   shouldScrubNonDialogue: boolean;
   timeInput: Time;
@@ -16,7 +17,7 @@ interface SubtitleFixerProps {
   handleFixSubtitles: (fixedCues: VTTCue[]) => void;
 }
 
-const SubtitleFixer = ({ lineStartInput, lineStopInput, scrubCharacters, shouldOffsetTimecodes, shouldScrubNonDialogue, timeInput, textInput, handleFixSubtitles }: SubtitleFixerProps) => {
+const SubtitleFixer = ({ lineStartInput, lineStopInput, scrubCharacters, shouldForceChronological, shouldOffsetTimecodes, shouldScrubNonDialogue, timeInput, textInput, handleFixSubtitles }: SubtitleFixerProps) => {
   const handleFix = (): void => {
       const lines = textInput.split("\n");
 
@@ -33,6 +34,9 @@ const SubtitleFixer = ({ lineStartInput, lineStopInput, scrubCharacters, shouldO
           return console.error('invalid offset amount from current time');
         }
         inputCues = SubtitleUtils.offsetCues(inputCues, offset, lineStartInput, lineStopInput, false);
+      }
+      if (shouldForceChronological) {
+        inputCues = SubtitleUtils.forceCuesIntoChronologicalOrder(inputCues);
       }
 
       handleFixSubtitles(inputCues);

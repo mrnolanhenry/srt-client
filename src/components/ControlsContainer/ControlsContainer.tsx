@@ -33,6 +33,7 @@ const ControlsContainer = ({ textInput, timeInput, handleFixSubtitles, handleTim
     const [customStartChar, setCustomStartChar] = useState<string>(TAG_OPEN);
     const [customEndChar, setCustomEndChar] = useState<string>(TAG_CLOSE);
     const [scrubCharacters, setScrubCharacters] = useState<ScrubCharacterSet[]>([]);
+    const [shouldForceChronological, setShouldForceChronological] = useState<boolean>(false);
 
     const getScrubChars = () => {
         let scrubCharacterSets: ScrubCharacterSet[] = [];
@@ -88,11 +89,15 @@ const ControlsContainer = ({ textInput, timeInput, handleFixSubtitles, handleTim
 
     const handleShouldOffsetToggle = () => {
         setShouldOffsetTimecodes(!shouldOffsetTimecodes);
-    }
+    };
 
     const handleShouldScrubToggle = () => {
         setShouldScrubNonDialogue(!shouldScrubNonDialogue);
-    }
+    };
+
+    const handleShouldForceChronologicalToggle = () => {
+        setShouldForceChronological(!shouldForceChronological);
+    };
 
     const handleHoursChange = (event: any) => {
         if (event.target.validity.valid) {
@@ -198,7 +203,7 @@ const ControlsContainer = ({ textInput, timeInput, handleFixSubtitles, handleTim
                         <div id="scrubLabelRow" className="flex-row">
                             <small>{`Which characters to use? e.g. "(chuckles)" or "[coughs]"`} </small>
                         </div>
-                        <div id="scrubNonDialogueRow" className="section-row flex-row align-center-row full-width">
+                        <div id="scrubNonDialogueRow" className="section-row flex-row align-center full-width">
                             <div className="flex-column padded-column">
                                 <div className="flex-row">
                                     <input type="checkbox" id="shouldScrubParentheses" checked={shouldScrubParentheses} onChange={handleScrubParentheses} />
@@ -221,6 +226,16 @@ const ControlsContainer = ({ textInput, timeInput, handleFixSubtitles, handleTim
                             />
                         </div>
                     </fieldset>
+                    <fieldset disabled={!shouldForceChronological}>
+                        <legend>
+                            <input type="checkbox" id="shouldForceChronologicalCheckbox" name="shouldForceChronologicalCheckbox" checked={shouldForceChronological} onChange={handleShouldForceChronologicalToggle} />
+                            <label htmlFor="shouldForceChronologicalCheckbox">Force lines into chronological order?</label>
+                        </legend>
+                        <div id="forceLabelRow" className="flex-row">
+                            <small>{`For any subtitle lines that start before the previous one ends, this will add the the previous subtitles' end time. 
+                            \nThe primary use case is working with a subtitle file made from concatenating several subtitle files together, e.g. a season of TV episodes.`} </small>
+                        </div>
+                    </fieldset>
                 </form>
                 <div className="flex-column">
                     <div className="flex-row centered-row">
@@ -228,6 +243,7 @@ const ControlsContainer = ({ textInput, timeInput, handleFixSubtitles, handleTim
                             lineStartInput={lineStartInput}
                             lineStopInput={lineStopInput}
                             scrubCharacters={scrubCharacters}
+                            shouldForceChronological={shouldForceChronological}
                             shouldOffsetTimecodes={shouldOffsetTimecodes}
                             shouldScrubNonDialogue={shouldScrubNonDialogue}
                             timeInput={timeInput}

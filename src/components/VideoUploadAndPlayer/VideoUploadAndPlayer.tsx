@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import './VideoUploadAndPlayer.css';
-import { ARROW_LEFT_CHAR, ARROW_RIGHT_CHAR, NUDGE_LEFT_CHAR, NUDGE_RIGHT_CHAR, SPEECH_BUBBLES_CHAR, UPLOAD_CHAR } from '../../constants/constants';
+import { ARROW_BRACKET_HEAVIER_LEFT_CHAR, ARROW_BRACKET_HEAVIER_RIGHT_CHAR, ARROW_LEFT_CHAR, ARROW_RIGHT_CHAR, ARROW_TRIANGLE_LARGE_LEFT_CHAR, ARROW_TRIANGLE_LARGE_RIGHT_CHAR, ARROW_TRIANGLE_LARGER_LEFT_CHAR, ARROW_TRIANGLE_LARGER_RIGHT_CHAR, ARROW_TRIANGLE_LEFT_CHAR, ARROW_TRIANGLE_RIGHT_CHAR, ARROW_TRIANGLE_SMALL_LEFT_CHAR, ARROW_TRIANGLE_SMALL_RIGHT_CHAR, NUDGE_LEFT_CHAR, NUDGE_LEFT_HOLLOW_CHAR, NUDGE_RIGHT_CHAR, NUDGE_RIGHT_HOLLOW_CHAR, SPEECH_BUBBLES_CHAR, UPLOAD_CHAR } from '../../constants/constants';
 import VideoControlButton from '../VideoControlButton/VideoControlButton';
 import useDebounce from '../../hooks/useDebounce';
 import fullscreenIcon from '../../assets/fullscreen.png';
@@ -114,6 +114,7 @@ const VideoUploadAndPlayer = ({cues, textOutput, timeInput, videoRef, handleFixS
       const currentTime = videoRef.current.currentTime;
       const previousCue = cues.findLast((cue: VTTCue) => cue.startTime < currentTime);
       if (previousCue) {
+        videoRef.current.pause();
         videoRef.current.currentTime = previousCue.startTime;
         videoRef.current.focus();
       }
@@ -178,14 +179,6 @@ const VideoUploadAndPlayer = ({cues, textOutput, timeInput, videoRef, handleFixS
     }
   };
 
-  const nudgeCuesBack = () => {
-    handleNudge(-100);
-  }
-
-  const nudgeCuesForward = () => {
-    handleNudge(100);
-  }
-
   const handleNudge = (offsetInMilliseconds: number): void => {
     if (videoRef.current) {
       const lines = textOutput.split("\n");
@@ -207,6 +200,12 @@ const VideoUploadAndPlayer = ({cues, textOutput, timeInput, videoRef, handleFixS
       else {
         console.log("Error - could not find cue at current time:" + videoRef.current.currentTime);
       }
+    }
+  };
+
+  const handleSkip = (offsetInMilliseconds: number): void => {
+    if (videoRef.current) {
+      videoRef.current.currentTime += offsetInMilliseconds / 1000;
     }
   };
 
@@ -252,35 +251,77 @@ const VideoUploadAndPlayer = ({cues, textOutput, timeInput, videoRef, handleFixS
           onMouseLeave={() => setIsControlFocused(false)}>
             <div id="videoControlsColLeft" className="flex-column">
               <div id="videoControlsRowLeft" className="flex-row">
-                <VideoControlButton
-                  controlText={ARROW_LEFT_CHAR}
-                  hoverText="Previous Subtitle"
-                  isDisabled={shouldDisableControls}
-                  handleClick={goToPreviousCue}
-                />
-                <VideoControlButton
-                  controlText={SPEECH_BUBBLES_CHAR}
-                  isClickable={false}
-                  isDisabled={shouldDisableControls}
-                />
-                <VideoControlButton
-                  controlText={ARROW_RIGHT_CHAR}
-                  hoverText="Next Subtitle"
-                  isDisabled={shouldDisableControls}
-                  handleClick={goToNextCue}
-                />
-                <VideoControlButton
-                  controlText={NUDGE_LEFT_CHAR}
-                  hoverText="Nudge -100ms"
-                  isDisabled={shouldDisableControls}
-                  handleClick={nudgeCuesBack}
-                />
-                <VideoControlButton
-                  controlText={NUDGE_RIGHT_CHAR}
-                  hoverText="Nudge 100ms"
-                  isDisabled={shouldDisableControls}
-                  handleClick={nudgeCuesForward}
-                />
+                <div className="video-control-button-group flex-row align-center">
+                  <VideoControlButton
+                    controlText={ARROW_LEFT_CHAR}
+                    hoverText="Previous Subtitle"
+                    isDisabled={shouldDisableControls}
+                    handleClick={goToPreviousCue}
+                  />
+                  <VideoControlButton
+                    controlText={SPEECH_BUBBLES_CHAR}
+                    isClickable={false}
+                    isDisabled={shouldDisableControls}
+                  />
+                  <VideoControlButton
+                    controlText={ARROW_RIGHT_CHAR}
+                    hoverText="Next Subtitle"
+                    isDisabled={shouldDisableControls}
+                    handleClick={goToNextCue}
+                  />
+                </div>
+                <div className="video-control-button-group flex-row align-center">
+                  <VideoControlButton
+                    controlText={ARROW_BRACKET_HEAVIER_LEFT_CHAR}
+                    hoverText="Nudge -1s"
+                    isDisabled={shouldDisableControls}
+                    handleClick={() => handleNudge(-1000)}
+                  />
+                  <VideoControlButton
+                    controlText={NUDGE_LEFT_CHAR}
+                    hoverText="Nudge -100ms"
+                    isDisabled={shouldDisableControls}
+                    handleClick={() => handleNudge(-100)}
+                  />
+                  <VideoControlButton
+                    controlText={NUDGE_RIGHT_CHAR}
+                    hoverText="Nudge 100ms"
+                    isDisabled={shouldDisableControls}
+                    handleClick={() => handleNudge(100)}
+                  />
+                  <VideoControlButton
+                    controlText={ARROW_BRACKET_HEAVIER_RIGHT_CHAR}
+                    hoverText="Nudge 1s"
+                    isDisabled={shouldDisableControls}
+                    handleClick={() => handleNudge(1000)}
+                  />
+                </div>
+                <div className="video-control-button-group flex-row align-center">
+                  <VideoControlButton
+                    controlText={ARROW_TRIANGLE_LARGER_LEFT_CHAR}
+                    hoverText="Skip -30s"
+                    isDisabled={shouldDisableControls}
+                    handleClick={() => handleSkip(-30000)}
+                  />
+                  <VideoControlButton
+                    controlText={ARROW_TRIANGLE_LEFT_CHAR}
+                    hoverText="Skip -3s"
+                    isDisabled={shouldDisableControls}
+                    handleClick={() => handleSkip(-3000)}
+                  />
+                  <VideoControlButton
+                    controlText={ARROW_TRIANGLE_RIGHT_CHAR}
+                    hoverText="Skip 3s"
+                    isDisabled={shouldDisableControls}
+                    handleClick={() => handleSkip(3000)}
+                  />
+                  <VideoControlButton
+                    controlText={ARROW_TRIANGLE_LARGER_RIGHT_CHAR}
+                    hoverText="Skip 30s"
+                    isDisabled={shouldDisableControls}
+                    handleClick={() => handleSkip(30000)}
+                  />
+                </div>
               </div>
             </div>
             <div id="videoControlsColRight" className="flex-column">
