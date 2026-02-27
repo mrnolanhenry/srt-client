@@ -1,6 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
 import './VideoUploadAndPlayer.css';
-import { ARROW_BRACKET_HEAVIER_LEFT_CHAR, ARROW_BRACKET_HEAVIER_RIGHT_CHAR, ARROW_LEFT_CHAR, ARROW_RIGHT_CHAR, ARROW_TRIANGLE_LARGE_LEFT_CHAR, ARROW_TRIANGLE_LARGE_RIGHT_CHAR, ARROW_TRIANGLE_LARGER_LEFT_CHAR, ARROW_TRIANGLE_LARGER_RIGHT_CHAR, ARROW_TRIANGLE_LEFT_CHAR, ARROW_TRIANGLE_RIGHT_CHAR, ARROW_TRIANGLE_SMALL_LEFT_CHAR, ARROW_TRIANGLE_SMALL_RIGHT_CHAR, NUDGE_LEFT_CHAR, NUDGE_LEFT_HOLLOW_CHAR, NUDGE_RIGHT_CHAR, NUDGE_RIGHT_HOLLOW_CHAR, SPEECH_BUBBLES_CHAR, UPLOAD_CHAR } from '../../constants/constants';
+import { ARROW_DOUBLE_LEFT_CHAR, ARROW_DOUBLE_LEFT_SHORT_CHAR, ARROW_DOUBLE_RIGHT_CHAR, 
+  ARROW_DOUBLE_RIGHT_SHORT_CHAR, ARROW_LEFT_CHAR, ARROW_PAIRED_LEFT_CHAR, ARROW_PAIRED_RIGHT_CHAR,
+  ARROW_RIGHT_CHAR, ARROW_SINGLE_LEFT_SHORT_CHAR, ARROW_SINGLE_RIGHT_SHORT_CHAR, NUDGE_LEFT_CHAR, 
+  NUDGE_RIGHT_CHAR, SPEECH_BUBBLES_CHAR, UPLOAD_CHAR } from '../../constants/constants';
 import VideoControlButton from '../VideoControlButton/VideoControlButton';
 import useDebounce from '../../hooks/useDebounce';
 import fullscreenIcon from '../../assets/fullscreen.png';
@@ -109,13 +112,16 @@ const VideoUploadAndPlayer = ({cues, textOutput, timeInput, videoRef, handleFixS
     setIsNewUpload(false);
   };
 
-  const goToPreviousCue = () => {
+  const goXCuesBack = (numberOfCues: number) => {
     if (videoRef.current) {
       const currentTime = videoRef.current.currentTime;
-      const previousCue = cues.findLast((cue: VTTCue) => cue.startTime < currentTime);
-      if (previousCue) {
+      const previousCueIndex = cues.findLastIndex((cue: VTTCue) => cue.startTime < currentTime);
+      if (previousCueIndex >= 0) {
+        // Go to first cue if there aren't X more cues to skip back to
+        const previousXCuesIndex = Math.max(0, previousCueIndex - numberOfCues + 1); 
+
         videoRef.current.pause();
-        videoRef.current.currentTime = previousCue.startTime;
+        videoRef.current.currentTime = cues[previousXCuesIndex].startTime;
         videoRef.current.focus();
       }
       else {
@@ -124,12 +130,15 @@ const VideoUploadAndPlayer = ({cues, textOutput, timeInput, videoRef, handleFixS
     }
   };
 
-  const goToNextCue = () => {
+  const goXCuesForward = (numberOfCues: number) => {
     if (videoRef.current) {
       const currentTime = videoRef.current.currentTime;
-      const nextCue = cues.find(cue => cue.startTime > currentTime);
-      if (nextCue) {
-        videoRef.current.currentTime = nextCue.startTime;
+      const nextCueIndex = cues.findIndex((cue: VTTCue) => cue.startTime > currentTime);
+      if (nextCueIndex > 0) {
+        // Go to last cue if there aren't X more cues to skip ahead to
+        let nextXCuesIndex = Math.min(cues.length, nextCueIndex + numberOfCues) - 1; 
+
+        videoRef.current.currentTime = cues[nextXCuesIndex].startTime;
         videoRef.current.focus();
       }
       else {
@@ -138,12 +147,12 @@ const VideoUploadAndPlayer = ({cues, textOutput, timeInput, videoRef, handleFixS
     }
   };
 
-  const getCurrentCue = () => {
+  const getCurrentCue = (): VTTCue | undefined => {
     if (videoRef.current) {
       const currentTime = videoRef.current.currentTime;
-      return cues.find(cue => cue.startTime <= currentTime && cue.endTime >= currentTime);
+      return cues.find((cue: VTTCue) => cue.startTime <= currentTime && cue.endTime >= currentTime);
     }
-    return null;
+    return undefined;
   };
 
   const resetVideoTextTracks = () => {
@@ -253,10 +262,16 @@ const VideoUploadAndPlayer = ({cues, textOutput, timeInput, videoRef, handleFixS
               <div id="videoControlsRowLeft" className="flex-row">
                 <div className="video-control-button-group flex-row align-center">
                   <VideoControlButton
+                    controlText={ARROW_PAIRED_LEFT_CHAR}
+                    hoverText="Previous 10 Subs"
+                    isDisabled={shouldDisableControls}
+                    handleClick={() => goXCuesBack(10)}
+                  />
+                  <VideoControlButton
                     controlText={ARROW_LEFT_CHAR}
                     hoverText="Previous Subtitle"
                     isDisabled={shouldDisableControls}
-                    handleClick={goToPreviousCue}
+                    handleClick={() => goXCuesBack(1)}
                   />
                   <VideoControlButton
                     controlText={SPEECH_BUBBLES_CHAR}
@@ -267,12 +282,18 @@ const VideoUploadAndPlayer = ({cues, textOutput, timeInput, videoRef, handleFixS
                     controlText={ARROW_RIGHT_CHAR}
                     hoverText="Next Subtitle"
                     isDisabled={shouldDisableControls}
-                    handleClick={goToNextCue}
+                    handleClick={() => goXCuesForward(1)}
+                  />
+                  <VideoControlButton
+                    controlText={ARROW_PAIRED_RIGHT_CHAR}
+                    hoverText="Next 10 Subs"
+                    isDisabled={shouldDisableControls}
+                    handleClick={() => goXCuesForward(10)}
                   />
                 </div>
                 <div className="video-control-button-group flex-row align-center">
                   <VideoControlButton
-                    controlText={ARROW_BRACKET_HEAVIER_LEFT_CHAR}
+                    controlText={ARROW_DOUBLE_LEFT_CHAR}
                     hoverText="Nudge -1s"
                     isDisabled={shouldDisableControls}
                     handleClick={() => handleNudge(-1000)}
@@ -290,7 +311,7 @@ const VideoUploadAndPlayer = ({cues, textOutput, timeInput, videoRef, handleFixS
                     handleClick={() => handleNudge(100)}
                   />
                   <VideoControlButton
-                    controlText={ARROW_BRACKET_HEAVIER_RIGHT_CHAR}
+                    controlText={ARROW_DOUBLE_RIGHT_CHAR}
                     hoverText="Nudge 1s"
                     isDisabled={shouldDisableControls}
                     handleClick={() => handleNudge(1000)}
@@ -298,25 +319,25 @@ const VideoUploadAndPlayer = ({cues, textOutput, timeInput, videoRef, handleFixS
                 </div>
                 <div className="video-control-button-group flex-row align-center">
                   <VideoControlButton
-                    controlText={ARROW_TRIANGLE_LARGER_LEFT_CHAR}
+                    controlText={ARROW_DOUBLE_LEFT_SHORT_CHAR}
                     hoverText="Skip -30s"
                     isDisabled={shouldDisableControls}
                     handleClick={() => handleSkip(-30000)}
                   />
                   <VideoControlButton
-                    controlText={ARROW_TRIANGLE_LEFT_CHAR}
+                    controlText={ARROW_SINGLE_LEFT_SHORT_CHAR}
                     hoverText="Skip -3s"
                     isDisabled={shouldDisableControls}
                     handleClick={() => handleSkip(-3000)}
                   />
                   <VideoControlButton
-                    controlText={ARROW_TRIANGLE_RIGHT_CHAR}
+                    controlText={ARROW_SINGLE_RIGHT_SHORT_CHAR}
                     hoverText="Skip 3s"
                     isDisabled={shouldDisableControls}
                     handleClick={() => handleSkip(3000)}
                   />
                   <VideoControlButton
-                    controlText={ARROW_TRIANGLE_LARGER_RIGHT_CHAR}
+                    controlText={ARROW_DOUBLE_RIGHT_SHORT_CHAR}
                     hoverText="Skip 30s"
                     isDisabled={shouldDisableControls}
                     handleClick={() => handleSkip(30000)}
