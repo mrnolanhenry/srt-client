@@ -55,7 +55,7 @@
         padding: 6px;
         left: 0;
         bottom: 0;
-        margin: 0 122px 35px 164px;
+        margin: 0 122px 36px 164px;
         width: calc(100% - 286px);
     }
 
@@ -69,7 +69,7 @@
     }
 
     .img-button {
-        padding-top: 3px;
+        padding-top: 6px;
     }
 
     #videoControlsRowLeft {
