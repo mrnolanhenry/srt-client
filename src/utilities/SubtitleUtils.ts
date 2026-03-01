@@ -1,3 +1,4 @@
+import { TIMECODE_SEPARATOR } from "../constants/constants";
 import type { ScrubCharacterSet } from "../interfaces/ScrubCharacterSet";
 import StringUtils from "./StringUtils";
 import TimeUtils from "./TimeUtils";
@@ -9,9 +10,10 @@ abstract class SubtitleUtils {
         let currentStartTime: number | null = null;
         let currentEndTime: number | null = null;
         let currentSubtitleText: string[] = [];
-        lines.forEach(line => {
-            let newLine = StringUtils.removeReturnCharacter(line);
-            if (StringUtils.isLineNumber(newLine)) {
+        lines.forEach((line, index, linesArray) => {
+            const newLine = StringUtils.removeReturnCharacter(line);
+            const prevLineIsTimecode = index > 0 && linesArray[index-1].includes(TIMECODE_SEPARATOR)
+            if (StringUtils.isLineNumber(newLine) && !prevLineIsTimecode) {
                 // line is a line number
                 // we have reached a new cue, so we can push the previous cue if it exists
                 if (currentLineNumber > 0 && currentLineNumber !== undefined && currentStartTime !== null && currentStartTime !== undefined && currentEndTime !== null && currentEndTime !== undefined) {
@@ -25,7 +27,7 @@ abstract class SubtitleUtils {
                 currentEndTime = null;
                 currentSubtitleText = [];
             }
-            else if (line.includes(" --> ")) {
+            else if (line.includes(TIMECODE_SEPARATOR)) {
                 // line is a timecode line
                 const {startTimeString, endTimeString} = SubtitleUtils.getStartAndEndString(newLine);
                 currentStartTime = TimeUtils.convertStringToMillisecs(startTimeString) as number;
@@ -33,9 +35,9 @@ abstract class SubtitleUtils {
             }
             else {
             // line is actual subtitle or dialogue
-            if (newLine !== "") {
-                currentSubtitleText.push(newLine);
-            }
+                if (newLine !== "") {
+                    currentSubtitleText.push(newLine);
+                }
             }
         });
         // Still need to push the last cue after the loop ends
@@ -46,7 +48,7 @@ abstract class SubtitleUtils {
     };
 
     static getStartAndEndString(lineString: string): {startTimeString: string, endTimeString: string} {
-        const lineArr = lineString.split(" --> ");
+        const lineArr = lineString.split(TIMECODE_SEPARATOR);
         const startTimeString = lineArr[0];
         const endTimeString = lineArr[1]
         return {startTimeString, endTimeString};
@@ -65,7 +67,7 @@ abstract class SubtitleUtils {
                 const newStartString = TimeUtils.convertMillisecsToString(cue.startTime * 1000);
                 const newEndString = TimeUtils.convertMillisecsToString(cue.endTime * 1000);
                 
-                const timeCodeString = newStartString + " --> " + newEndString;
+                const timeCodeString = newStartString + TIMECODE_SEPARATOR + newEndString;
                 lines.push(timeCodeString);
 
                 cueLines.forEach(cueLine => {
@@ -139,31 +141,23 @@ abstract class SubtitleUtils {
         cues.forEach((currentCue, index, cues) => {
             if (index > 0 && currentCue.startTime < maxEndTime) {
                 // should offset
-                // console.log("________currentCue.id_________");
-                // console.log(currentCue.id);
-                // console.log("endTimeOffset");
-                // console.log(endTimeOffset);
                 let prevCueEndTime = cues[index - 1].endTime;
                 if (currentCue.startTime < prevCueEndTime) {
                     // should change what the offset is
-                    console.log("-----currentCue.id-----");
-                    console.log(currentCue.id);
                     endTimeOffset += prevCueEndTime;
-                    console.log("endTimeOffset");
-                    console.log(endTimeOffset);
                 }
 
-                
                 const newCueStartTime = currentCue.startTime + endTimeOffset;
                 const newCueEndTime = currentCue.endTime + endTimeOffset;
                 const newCue = new VTTCue(newCueStartTime, newCueEndTime, currentCue.text);
                 newCue.id = currentCue.id;
                 newCues.push(newCue);
+                maxEndTime = Math.max(maxEndTime, newCueEndTime);
             }
             else {
                 newCues.push(currentCue);
+                maxEndTime = Math.max(maxEndTime, currentCue.endTime);
             }
-            maxEndTime = Math.max(maxEndTime, currentCue.endTime)
         });
         return newCues;
     }

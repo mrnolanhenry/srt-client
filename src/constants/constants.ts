@@ -44,6 +44,9 @@ export const SPEECH_BUBBLE_RIGHT_CHAR = '\u{1F5E9}';
 export const SPEECH_BUBBLES_CHAR = '\u{1F5EA}';
 export const UPLOAD_CHAR = '\u{2912}';
 
+// SRT file format Timecode separator
+export const TIMECODE_SEPARATOR = " --> ";
+
 // Special chracters for scrubbing non-dialogue
 export const BRACKET_OPEN = "[";
 export const BRACKET_CLOSE = "]";
