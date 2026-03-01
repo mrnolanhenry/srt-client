@@ -1,6 +1,7 @@
 #btnFix {
     background-color: color-mix(in oklab, rgba(82, 131, 136, 1) 75%, black);
     border: 1px solid color-mix(in oklab, rgba(82, 131, 136, 1) 75%, black);
+    width: 100%;
 }
 
 #btnFix:hover {

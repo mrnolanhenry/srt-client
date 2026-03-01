@@ -1,0 +1,40 @@
+.notification-information {
+    background-color: #5d5d5d;
+    /* color: black; */
+}
+
+.notification-warning {
+    background-color: rgba(227, 213, 129, 1);
+    color: black;
+
+    button {
+        color: black;
+    }
+}
+
+.notification-error {
+    background-color: rgba(255, 135, 153, 1);
+    color: rgba(161, 46, 63, 1);
+
+    button {
+        color: rgba(161, 46, 63, 1);
+    }
+}
+
+.notification {
+    font-size: 12px;
+    align-items: center;
+    /* padding: 0 0 0 6px; */
+    button {
+        background-color: transparent;
+        font-size: 12px;
+        display: flex;
+        width: 100%;
+        justify-content: space-between;
+    }
+    button:hover,
+    button:focus {
+        border-color: transparent;
+        outline: none;
+    }
+}
