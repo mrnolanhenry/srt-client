@@ -10,6 +10,7 @@ import fullscreenIcon from '../../assets/fullscreen.png';
 import fullscreenExitIcon from '../../assets/fullscreen_exit.png';
 import SubtitleUtils from '../../utilities/SubtitleUtils';
 import TimeUtils from '../../utilities/TimeUtils';
+import { NotificationCategories, NotificationTypes, type AppNotification } from '../../interfaces/AppNotification';
 
 
 interface VideoUploadAndPlayerProps {
@@ -17,10 +18,11 @@ interface VideoUploadAndPlayerProps {
   textOutput: string;
   timeInput: Date;
   videoRef: React.RefObject<HTMLVideoElement>;
+  addNotifications: (notifications: AppNotification[]) => void;
   handleFixSubtitles: (cues: VTTCue[]) => void;
 }
 
-const VideoUploadAndPlayer = ({cues, textOutput, timeInput, videoRef, handleFixSubtitles}: VideoUploadAndPlayerProps) => {
+const VideoUploadAndPlayer = ({cues, textOutput, timeInput, videoRef, addNotifications, handleFixSubtitles}: VideoUploadAndPlayerProps) => {
   const [videoSrc, setVideoSrc] = useState<string | null>(null);
   const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
   const [isNewUpload, setIsNewUpload] = useState(false);
@@ -125,7 +127,15 @@ const VideoUploadAndPlayer = ({cues, textOutput, timeInput, videoRef, handleFixS
         videoRef.current.focus();
       }
       else {
-        console.log('No previous subtitle found');
+        const newNotification: AppNotification = {
+          category: NotificationCategories.VIDEO_PLAYER_FEEDBACK,
+          message: `No previous subtitle found`, 
+          isDismissible: true,
+          timeout: 3000,
+          title: `No previous subtitle found`, 
+          type: NotificationTypes.INFORMATION, 
+        };
+        addNotifications([newNotification]);
       }
     }
   };
@@ -142,7 +152,15 @@ const VideoUploadAndPlayer = ({cues, textOutput, timeInput, videoRef, handleFixS
         videoRef.current.focus();
       }
       else {
-        console.log('No next subtitle found');
+        const newNotification: AppNotification = {
+          category: NotificationCategories.VIDEO_PLAYER_FEEDBACK,
+          message: `No next subtitle found`, 
+          isDismissible: true, 
+          timeout: 3000,
+          title: `No next subtitle found`, 
+          type: NotificationTypes.INFORMATION, 
+        };
+        addNotifications([newNotification]);
       }
     }
   };
@@ -207,7 +225,15 @@ const VideoUploadAndPlayer = ({cues, textOutput, timeInput, videoRef, handleFixS
         handleFixSubtitles(newCues);
       }
       else {
-        console.log("Error - could not find cue at current time:" + videoRef.current.currentTime);
+        const newNotification: AppNotification = {
+          category: NotificationCategories.VIDEO_PLAYER_FEEDBACK,
+          message: `Could not find subtitle at current time.`, 
+          isDismissible: true, 
+          timeout: 3000,
+          title: `No subtitle found`, 
+          type: NotificationTypes.INFORMATION, 
+        };
+        addNotifications([newNotification]);
       }
     }
   };

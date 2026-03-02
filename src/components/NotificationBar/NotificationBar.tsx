@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { NotificationTypes, type AppNotification, type NotificationType } from "../../interfaces/AppNotification";
 import './NotificationBar.css';
 
@@ -8,7 +9,14 @@ interface NotificationBarProps {
 
 const NotificationBar = ({ notifications, removeNotifications }: NotificationBarProps) => {
 
-
+  useEffect(() => {
+    notifications.forEach((notification: AppNotification) => {
+      if (notification.timeout) {
+        setTimeout(() => removeNotifications([notification]), notification.timeout);
+      }
+    })
+  }, [notifications]);
+  
   const getClassNameFromType = (type: NotificationType): string => {
     switch (type) {
       case NotificationTypes.ERROR:
@@ -27,7 +35,7 @@ const NotificationBar = ({ notifications, removeNotifications }: NotificationBar
         <div className="flex-column full-width">
           {Array.from(notifications).map((notification, index) => {
               return (
-                  <div key={index} className={`flex-row spaced-between-row notification ${getClassNameFromType(notification.type)}`}>
+                  <div key={index} className={`flex-row spaced-between-row notification ${getClassNameFromType(notification.type)} ${notification.timeout ? 'timeout' :''}`}>
                     <button onClick={() => removeNotifications([notification])}>
                       <span>
                         {notification.message}

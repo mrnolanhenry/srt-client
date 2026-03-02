@@ -3,15 +3,17 @@ import { useRef, useState } from 'react';
 import TabbedContainer from '../common/TabbedContainer/TabbedContainer';
 import TabWrapper from '../common/TabWrapper/TabWrapper';
 import VideoUploadAndPlayer from '../VideoUploadAndPlayer/VideoUploadAndPlayer';
+import type { AppNotification } from '../../interfaces/AppNotification';
 
 interface VideoContainerProps {
     cues: VTTCue[];
     textOutput: string;
     timeInput: Date;
+    addNotifications: (notifications: AppNotification[]) => void;
     handleFixSubtitles: (cues: VTTCue[]) => void;
 }
 
-const VideoContainer = ({ cues, textOutput, timeInput, handleFixSubtitles }: VideoContainerProps) => {
+const VideoContainer = ({ cues, textOutput, timeInput, addNotifications, handleFixSubtitles }: VideoContainerProps) => {
     const VIDEO_PREVIEW = "videoPreview";
 
     const videoRef = useRef<HTMLVideoElement>(null);
@@ -39,6 +41,7 @@ const VideoContainer = ({ cues, textOutput, timeInput, handleFixSubtitles }: Vid
                     textOutput={textOutput}
                     timeInput={timeInput}
                     videoRef={videoRef as React.RefObject<HTMLVideoElement>}
+                    addNotifications={addNotifications}
                     handleFixSubtitles={handleFixSubtitles}
                 />
             </TabWrapper>
