@@ -134,7 +134,7 @@ const VideoUploadAndPlayer = ({cues, textOutput, timeInput, videoRef, handleFixS
     if (videoRef.current) {
       const currentTime = videoRef.current.currentTime;
       const nextCueIndex = cues.findIndex((cue: VTTCue) => cue.startTime > currentTime);
-      if (nextCueIndex > 0) {
+      if (nextCueIndex >= 0) {
         // Go to last cue if there aren't X more cues to skip ahead to
         let nextXCuesIndex = Math.min(cues.length, nextCueIndex + numberOfCues) - 1; 
 
