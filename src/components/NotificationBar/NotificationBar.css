@@ -24,7 +24,8 @@
 .notification {
     font-size: 12px;
     align-items: center;
-    /* padding: 0 0 0 6px; */
+    animation: fadeIn .3s ease-in forwards;
+
     button {
         background-color: transparent;
         font-size: 12px;
@@ -36,5 +37,65 @@
     button:focus {
         border-color: transparent;
         outline: none;
+    }
+
+    &.timeout {
+        animation: fadeInOut 3s ease-in-out forwards;
+    }
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+        visibility: hidden;
+        display: none;
+    }
+    
+    100% {
+        opacity: 1;
+        visibility: visible;
+    }
+}
+
+@keyframes fadeOut {
+    0% {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    50% {
+        opacity: 1;
+    }
+    
+    100% {
+        opacity: 0;
+        visibility: hidden;
+        display: none;
+    }
+}
+
+@keyframes fadeInOut {
+    0% {
+        opacity: 0;
+        visibility: hidden;
+        display: none;
+    }
+
+    20% {
+        opacity: 1;
+        visibility: visible;
+        display: initial;
+    }
+
+    80% {
+        opacity: 1;
+        visibility: visible;
+        display: initial;
+    }
+    
+    100% {
+        opacity: 0;
+        visibility: hidden;
+        display: none;
     }
 }

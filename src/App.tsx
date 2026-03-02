@@ -8,7 +8,7 @@ import useDebounce from './hooks/useDebounce';
 import type { FileContent } from './interfaces/FileContent';
 import SubtitleUtils from './utilities/SubtitleUtils';
 import VideoContainer from './components/VideoContainer/VideoContainer';
-import { NotificationTypes, type AppNotification } from './interfaces/AppNotification';
+import { NotificationCategories, NotificationTypes, type AppNotification } from './interfaces/AppNotification';
 import NotificationBar from './components/NotificationBar/NotificationBar';
 import TimeUtils from './utilities/TimeUtils';
 
@@ -27,7 +27,6 @@ function App() {
   const [fileContents, setFileContents] = useState<FileContent[]>([]);
   const [timeInput, setTimeInput] = useState<Time>(new Time(0, 0, 0, 0));
   const [notifications, setNotifications] = useState<Set<AppNotification>>(new Set<AppNotification>([]));
-  // const [notifications, setNotifications] = useState<Set<AppNotification>>(new Set([{message: "Hello World", isDismissible: true, title: "helloworld", type: NotificationTypes.INFORMATION}]));
 
   const refInputTextArea = useRef<HTMLTextAreaElement>(null);
   const refOutputTextArea = useRef<HTMLTextAreaElement>(null);
@@ -43,25 +42,25 @@ function App() {
     setNotifications(new Set([...notifications]));
   };
 
-  // TODO: Handle better - this is a temporary check to see which cues don't take place AFTER the previous cue.
   useEffect(() => {
-    // TODO: Handle better - currently wiping all notifications
-    removeNotifications([...notifications]);
-    // Then adding notifications for any cues out of order.
-    addOutOfOrderNotifications();
+    const currentOutOfOrderNotifications = Array.from(notifications).filter((notification: AppNotification) => notification.category === NotificationCategories.OUT_OF_ORDER);
+    removeNotifications(currentOutOfOrderNotifications);
+
+    const newOutOfOrderNotifications = getOutOfOrderNotifications();
+    addNotifications(newOutOfOrderNotifications);
   }, [cues]);
 
-  const addOutOfOrderNotifications = () => {
+  const getOutOfOrderNotifications = () => {
     let outOfOrderNotifications: AppNotification[] = [];
     cues.forEach((cue, index, cues) => {
       if (index > 0 && cue.startTime < cues[index - 1].endTime) {
         const currentCueStartTimeString = TimeUtils.convertMillisecsToString(cue.startTime * 1000);
         const prevCueEndTimeString = TimeUtils.convertMillisecsToString(cues[index - 1].endTime * 1000);
-        const newNotification: AppNotification = {message: `Out of order: line ${cue.id} at ${currentCueStartTimeString} does not take place after the previous line ending at ${prevCueEndTimeString}`, isDismissible: true, title: `Out of order`, type: NotificationTypes.WARNING};
+        const newNotification: AppNotification = {message: `Out of order: line ${cue.id} at ${currentCueStartTimeString} does not take place after the previous line ending at ${prevCueEndTimeString}`, isDismissible: true, title: `Out of order`, type: NotificationTypes.WARNING, category: NotificationCategories.OUT_OF_ORDER};
         outOfOrderNotifications.push(newNotification);
       }
     });
-    addNotifications(outOfOrderNotifications);
+    return outOfOrderNotifications;
   };
 
   const handleScroll = (event: any) => {
@@ -151,6 +150,7 @@ function App() {
                     cues={debouncedCues}
                     textOutput={textOutput}
                     timeInput={timeInput}
+                    addNotifications={addNotifications}
                     handleFixSubtitles={handleFixSubtitles}
                 />
               </div>
